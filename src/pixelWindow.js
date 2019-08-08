@@ -1,5 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-class pixelWindow extends React.Component{
+class PixelWindow extends React.Component{
     constructor(props){
         super(props);
         this.state={
@@ -14,12 +16,12 @@ class pixelWindow extends React.Component{
         console.log("you clicked pixelstreaming window!!");
         console.log("you will be happy!!");
         this.setState({
-            buttonname:aaaaaaa
+            buttonname:"aaaaaaa"
         });
     }
 
     componentWillMount(){
-        addResponseEventListener("handle_responses", this.myHandleResponseFunction);
+        window.addResponseEventListener("handle_responses", this.myHandleResponseFunction);
         console.log("componentwillmount")
     }
 
@@ -36,7 +38,9 @@ class pixelWindow extends React.Component{
     }
 }
 
-let domContainer = document.querySelector('#pixelWindow');
-ReactDOM.render(e(pixelWindow), domContainer);
+export default PixelWindow;
+
+// let domContainer = document.querySelector('#pixelWindow');
+// ReactDOM.render(e(pixelWindow), domContainer);
 
 
