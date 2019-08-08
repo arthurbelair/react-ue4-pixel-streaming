@@ -1,0 +1,17 @@
+{
+    "name": "Remote Development Skelton",
+    "dockerComposeFile": [
+      "../docker-compose.yml"
+    ],
+    "service": "node",
+    "workspaceFolder": "/app",
+    "extensions": [
+    ],
+    "settings": {
+      "editor.tabSize": 4,
+      "files.insertFinalNewline": true,
+      "files.trimFinalNewlines": true,
+      "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "shutdownAction": "stopCompose"
+  }
