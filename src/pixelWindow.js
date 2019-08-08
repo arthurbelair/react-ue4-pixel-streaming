@@ -16,13 +16,22 @@ class PixelWindow extends React.Component{
         console.log("you clicked pixelstreaming window!!");
         console.log("you will be happy!!");
         this.setState({
-            buttonname:"aaaaaaa"
+            buttonname:data
         });
     }
 
     componentWillMount(){
         window.addResponseEventListener("handle_responses", this.myHandleResponseFunction);
-        console.log("componentwillmount")
+        console.log("atached handler");
+        
+        /* invokeテスト */
+        /* mountしたら5秒後にhandler呼ぶ */
+        setTimeout(()=>{this.myHandleResponseFunction("test!!!")},5000);
+    }
+
+    componentWillUnmount(){
+        window.removeResponseEventListener("handle_responses");
+        console.log("removed handler");
     }
 
     render(){
