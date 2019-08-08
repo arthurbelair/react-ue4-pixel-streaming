@@ -15,3 +15,8 @@ npm run start
 ```
 npm run build
 ```
+
+
+# 4. デプロイ
+
+`npm run build`すると`./build`にビルドされた静的ファイルが生成されるので、PixelStreamingのSignalingServerのcustom_htmlあたりに突っ込む。
