@@ -20,13 +20,18 @@ class PixelWindow extends React.Component{
         });
     }
 
-    componentWillMount(){
+    componentDidMount(){
+        console.log(this);
+
         window.addResponseEventListener("handle_responses", this.myHandleResponseFunction);
         console.log("atached handler");
         
+        window.addEventListener("click", ()=>{this.myHandleResponseFunction("clickeddddd!!!!")})
+
         /* invokeテスト */
         /* mountしたら5秒後にhandler呼ぶ */
-        setTimeout(()=>{this.myHandleResponseFunction("test!!!")},5000);
+        setTimeout(()=>{this.myHandleResponseFunction("timeouted!!!!!!!!!!!")},5000);
+
     }
 
     componentWillUnmount(){
