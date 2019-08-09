@@ -7,6 +7,8 @@
 node_modules
 logs
 
+custom_html/
+
 # testing
 /coverage
 
