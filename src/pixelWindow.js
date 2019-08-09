@@ -31,6 +31,7 @@ class PixelWindow extends React.Component{
         /* invokeテスト */
         /* mountしたら5秒後にhandler呼ぶ */
         setTimeout(()=>{this.myHandleResponseFunction("timeouted!!!!!!!!!!!")},5000);
+        window.load();
 
     }
 
@@ -42,7 +43,7 @@ class PixelWindow extends React.Component{
     render(){
         return(
         <div>
-            <div id ="player" className="fixed-size" >False</div>
+            <div id ="player" className="fixed-size" />
              {/*<div id ="player" className="fixed-size" onClick={()=>{this.myHandleResponseFunction()}}>False</div>*/}
             <div>
                 <button>{this.state.buttonname}</button>
