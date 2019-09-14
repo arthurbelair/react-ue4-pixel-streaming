@@ -1157,7 +1157,7 @@ function start() {
 }
 
 function connect() {
-	socket = io('localhost');
+	socket = io();
 
 	socket.on('clientConfig', function (clientConfig) {
 		onClientConfig(clientConfig);

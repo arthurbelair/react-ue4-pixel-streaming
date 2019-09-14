@@ -1,19 +1,22 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PixelWindow from './PixelWindow';
 import PixelLogWindow from './PixelLogWindow';
 import PixelStreamingClient from './lib/app';
 
-class PixelWrapper extends React.Component{
+const PixelStreamingContext = React.createContext();
+
+export default class ReactPixelStreaming extends Component{
     constructor(props){
         super(props);
         this.state={
-//            load: window.load,
             load: PixelStreamingClient.load,
             logs: [],
             addResponseEventListener: PixelStreamingClient.addResponseEventListener,
             removeResponseEventListener: PixelStreamingClient.removeResponseEventListener,
+            emitCommand: PixelStreamingClient.emitCommand,
+            emitDescriptor:PixelStreamingClient.emitDescriptor,
+            emitUIInteraction:PixelStreamingClient.emitUIInteraction
         };
-        // this.myHandleResponseFunction = this.myHandleResponseFunction.bind(this);
     }
 
     myHandleResponseFunction =(data)=>{
@@ -36,23 +39,19 @@ class PixelWrapper extends React.Component{
     }
 
     render(){
-        const {load, addResponseEventListener, removeResponseEventListener, logs} = this.state;
+        const {load, addResponseEventListener, removeResponseEventListener, logs, emmitCommand, emmitDescriptor, emmitUIInteraction} = this.state;
         return(
-        <div style={style}>
+            <PixelStreamingContext.Provider  value={this.state}>
+        <div style={this.props.style}>
             <PixelWindow load={load} />
-            <PixelLogWindow 
+            <PixelLogWindow
                 addResponseEventListener={addResponseEventListener} 
                 removeResponseEventListener={removeResponseEventListener}
                 logs={logs}
             />
+            {this.props.children}
         </div>
+        </PixelStreamingContext.Provider>
         )
     }
 }
-
-export default PixelWrapper;
-
-const style = {
-    display:"flex",
-}        
-
