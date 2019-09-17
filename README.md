@@ -1,34 +1,45 @@
-# 1. 依存関係解消
+# 1. Reactプロジェクト作成しとく
 
+ex)
 ```
-npm install
-```
-
-# 2. run without UE4
-
-```
-npm run start
+create-react-app your_react_project
 ```
 
-# 3. ビルド
+# 2. package.jsonに追加
 
 ```
-npm run build
+cd your_react_project
+npm install shogo-hab/PixelStreamingComponent#developPixelComponent --save
 ```
 
+# 3. Example
 
-# 4. デプロイ
+```jsx App.js
+import React from 'react';
+import ReactPixelStreaming, {PixelStreamingContext} from 'pixel-streaming-component';
 
-`npm run build`すると`./build`にビルドされた静的ファイルが生成されるので、PixelStreamingのSignalingServerのcustom_htmlあたりに突っ込む。
+function App() {
+  return (
+    <ReactPixelStreaming>
+        {/*
+          * ReactPixelStreamingで子孫ComponentとContextを共有する
+          */}
+        <YourComponent />
+    </ReactPixelStreaming>
+  );
+}
 
+const YourComponent = () => (
+        {/*
+          * 子孫からPixelStreamingやWebRTC Playerへアクセスする場合はConsumerでWrapする
+          */}
+
+  <PixelStreamingContext.Consumer>
+    {(state) => (
+        <SomeComponent onClick={(e)=>{state.emitCommand(e)}}></SomeComponent>
+    )}
+    </PixelStreamingContext.Consumer>
+  );
+
+export default App;
 ```
-npm run build
-cp -r build/* UE4/SignallingWebServer/custom_html/
-```
-
-# 5. Run PixelStreaming
-
-1. `Start_WebRTCProxy.bat`起動
-2. PixelStreamingが有効化されてるUE4のゲームインスタンスを起動
-    * StandAloneかビルドする
-3. `./UE4/SignalingWebServerrun.bat`を起動
