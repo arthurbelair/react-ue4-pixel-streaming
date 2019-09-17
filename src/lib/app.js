@@ -1248,5 +1248,8 @@ module.exports = {
 	removeResponseEventListener,
 	emitUIInteraction,
 	emitCommand,
-	emitDescriptor
+	emitDescriptor,
+	controlScheme: 	inputOptions.controlScheme,
+	suppressBrowserKeys: inputOptions.suppressBrowserKeys,
+	fakeMouseWithTouches: inputOptions.fakeMouseWithTouches,
 };

@@ -1,5 +1,6 @@
 import React from 'react';
-import PixelWrapper from './ReactPixelStreaming';
+import ReactPixelStreaming from './index.jsx';
+import PixelLogWindow from './PixelLogWindow';
 
 class App extends React.Component{
     constructor(props){
@@ -10,9 +11,9 @@ class App extends React.Component{
     render(){
         return(
         <div>
-            <PixelWrapper>
-                <div>aaa</div>
-            </PixelWrapper>
+            <ReactPixelStreaming>
+                <PixelLogWindow />
+            </ReactPixelStreaming>
         </div>
         )
     }

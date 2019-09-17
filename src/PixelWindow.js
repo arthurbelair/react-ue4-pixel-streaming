@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Component} from 'react';
 
 class PixelWindow extends React.Component{
     constructor(props){
@@ -9,6 +9,7 @@ class PixelWindow extends React.Component{
 
     componentDidMount(){
         // PixelStreamingのロード
+        // this.props.controlScheme = this.props.controlScheme
         this.props.load();
     }
 
