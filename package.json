@@ -1,5 +1,5 @@
 {
-  "name": "PixelStreamingComponent",
+  "name": "pixel-streaming-component",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
