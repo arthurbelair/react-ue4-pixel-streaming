@@ -9,8 +9,13 @@ class PixelWindow extends React.Component {
 
   componentDidMount() {
     // PixelStreamingのロード
+    
+    // loadでkeyInputのバインド
     this.props.load();
-}
+
+    // 黙ってconnect()
+    this.props.connect();
+  }
 
   componentWillUnmount() {}
 
@@ -19,13 +24,15 @@ class PixelWindow extends React.Component {
     return (
       <div style={style}>
         <div id="player" className="fixed-size">
-          <PixelStreamingContext.Consumer>
-            {context =>
-              context.webrtcState
-                ? PlayerComponent(context.webrtcState)
-                : PlayerComponent(this.props.webrtcState)
-            }
-          </PixelStreamingContext.Consumer>
+          <div id="videoPlayOverlay">
+            <PixelStreamingContext.Consumer>
+              {context =>
+                context.webrtcState
+                  ? PlayerComponent(context.webrtcState)
+                  : PlayerComponent(this.props.webrtcState)
+              }
+            </PixelStreamingContext.Consumer>
+          </div>
         </div>
       </div>
     );
@@ -37,8 +44,10 @@ const style = {};
 export default PixelWindow;
 
 const PlayerComponent = webrtcState => {
-  if (webrtcState === "connect") return <div>{webrtcState}</div>;
-  if (webrtcState === "play") return <div>{webrtcState}</div>;
+  if (webrtcState === "loading") return <div>{webrtcState}</div>;
+  if (webrtcState === "disConnected") return <div>{webrtcState}</div>;
+  if (webrtcState === "connecting") return <div>{webrtcState}</div>;
+  if (webrtcState === "connected") return <div>{webrtcState}</div>;
   if (webrtcState === "playing") return <div>{webrtcState}</div>;
   if (webrtcState === "stop") return <div>{webrtcState}</div>;
 };

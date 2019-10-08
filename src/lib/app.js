@@ -33,101 +33,105 @@ function setupHtmlEvents(){
 	window.addEventListener('orientationchange', onOrientationChange);
 
 	//HTML elements controls
-	let resizeCheckBox = document.getElementById('enlarge-display-to-fill-window-tgl');
-    if (resizeCheckBox != null) {
-		resizeCheckBox.onchange = function(event){
-			resizePlayerStyle();
-		}
-	}
 
-	qualityControlOwnershipCheckBox = document.getElementById('quality-control-ownership-tgl');
-	if (qualityControlOwnershipCheckBox != null) {
-		qualityControlOwnershipCheckBox.onchange = function (event) {
-			requestQualityControl();
-		}
-	}
+	// TODO: 別にいらん
+	// let resizeCheckBox = document.getElementById('enlarge-display-to-fill-window-tgl');
+    // if (resizeCheckBox != null) {
+	// 	resizeCheckBox.onchange = function(event){
+	// 		resizePlayerStyle();
+	// 	}
+	// }
 
-	let prioritiseQualityCheckbox = document.getElementById('prioritise-quality-tgl');
-	let qualityParamsSubmit = document.getElementById('quality-params-submit');
+	// TODO: QualityControl別で実装
+	// qualityControlOwnershipCheckBox = document.getElementById('quality-control-ownership-tgl');
+	// if (qualityControlOwnershipCheckBox != null) {
+	// 	qualityControlOwnershipCheckBox.onchange = function (event) {
+	// 		requestQualityControl();
+	// 	}
+	// }
 
-	if (prioritiseQualityCheckbox != null) {
-	    prioritiseQualityCheckbox.onchange = function (event) {	        
-	        if (prioritiseQualityCheckbox.checked) {
-                // TODO: This state should be read from the UE Application rather than from the initial values in the HTML
-	            let lowBitrate = document.getElementById('low-bitrate-text').value;
-	            let highBitrate = document.getElementById('high-bitrate-text').value;
-	            let minFPS = document.getElementById('min-fps-text').value;
+	// TODO: コントロール系は再実装する
+	// let prioritiseQualityCheckbox = document.getElementById('prioritise-quality-tgl');
+	// let qualityParamsSubmit = document.getElementById('quality-params-submit');
 
-	            let initialDescriptor = {
-	                PrioritiseQuality: 1,
-	                LowBitrate: lowBitrate,
-	                HighBitrate: highBitrate,
-	                MinFPS: minFPS
-	            }
-	            // TODO: The descriptor should be sent as is to a generic handler on the UE side
-                // but for now we're just sending it as separate console commands
-	            //emitUIInteraction(initialDescriptor); 
-	            sendQualityConsoleCommands(initialDescriptor);
-	            console.log(initialDescriptor);
+	// if (prioritiseQualityCheckbox != null) {
+	//     prioritiseQualityCheckbox.onchange = function (event) {	        
+	//         if (prioritiseQualityCheckbox.checked) {
+    //             // TODO: This state should be read from the UE Application rather than from the initial values in the HTML
+	//             let lowBitrate = document.getElementById('low-bitrate-text').value;
+	//             let highBitrate = document.getElementById('high-bitrate-text').value;
+	//             let minFPS = document.getElementById('min-fps-text').value;
 
-	            qualityParamsSubmit.onclick = function (event) {
-	                let lowBitrate = document.getElementById('low-bitrate-text').value;
-	                let highBitrate = document.getElementById('high-bitrate-text').value;
-	                let minFPS = document.getElementById('min-fps-text').value;
-	                let descriptor = {
-	                    PrioritiseQuality: 1,
-	                    LowBitrate: lowBitrate,
-	                    HighBitrate: highBitrate,
-                        MinFPS: minFPS
-	                }
-	                //emitUIInteraction(descriptor);
-	                sendQualityConsoleCommands(descriptor);
-	                console.log(descriptor);
-	            }
-	        } else { // Prioritise Quality unchecked
-	            let initialDescriptor = {
-	                PrioritiseQuality: 0
-	            }
-	            //emitUIInteraction(initialDescriptor);
-	            sendQualityConsoleCommands(initialDescriptor);
-	            console.log(initialDescriptor);
+	//             let initialDescriptor = {
+	//                 PrioritiseQuality: 1,
+	//                 LowBitrate: lowBitrate,
+	//                 HighBitrate: highBitrate,
+	//                 MinFPS: minFPS
+	//             }
+	//             // TODO: The descriptor should be sent as is to a generic handler on the UE side
+    //             // but for now we're just sending it as separate console commands
+	//             //emitUIInteraction(initialDescriptor); 
+	//             sendQualityConsoleCommands(initialDescriptor);
+	//             console.log(initialDescriptor);
 
-	            qualityParamsSubmit.onclick = null;
-	        }
-	    }
-	}
+	//             qualityParamsSubmit.onclick = function (event) {
+	//                 let lowBitrate = document.getElementById('low-bitrate-text').value;
+	//                 let highBitrate = document.getElementById('high-bitrate-text').value;
+	//                 let minFPS = document.getElementById('min-fps-text').value;
+	//                 let descriptor = {
+	//                     PrioritiseQuality: 1,
+	//                     LowBitrate: lowBitrate,
+	//                     HighBitrate: highBitrate,
+    //                     MinFPS: minFPS
+	//                 }
+	//                 //emitUIInteraction(descriptor);
+	//                 sendQualityConsoleCommands(descriptor);
+	//                 console.log(descriptor);
+	//             }
+	//         } else { // Prioritise Quality unchecked
+	//             let initialDescriptor = {
+	//                 PrioritiseQuality: 0
+	//             }
+	//             //emitUIInteraction(initialDescriptor);
+	//             sendQualityConsoleCommands(initialDescriptor);
+	//             console.log(initialDescriptor);
 
-	let showFPSCheckBox = document.getElementById('show-fps-tgl');
-	if (showFPSCheckBox != null) {
-	    showFPSCheckBox.onchange = function (event) {
-	        let consoleDescriptor = {
-	            Console: 'stat fps'
-	        }
-	        emitUIInteraction(consoleDescriptor);
-	    }
-	}
+	//             qualityParamsSubmit.onclick = null;
+	//         }
+	//     }
+	// }
 
-	let matchViewportResolutionCheckBox = document.getElementById('match-viewport-res-tgl');
-	if (matchViewportResolutionCheckBox != null) {
-	    matchViewportResolutionCheckBox.onchange = function (event) {
-	        matchViewportResolution = matchViewportResolutionCheckBox.checked;
-	    }
-	}
+	// let showFPSCheckBox = document.getElementById('show-fps-tgl');
+	// if (showFPSCheckBox != null) {
+	//     showFPSCheckBox.onchange = function (event) {
+	//         let consoleDescriptor = {
+	//             Console: 'stat fps'
+	//         }
+	//         emitUIInteraction(consoleDescriptor);
+	//     }
+	// }
 
-    let statsCheckBox = document.getElementById('show-stats-tgl');
-	if (statsCheckBox != null) {
-		statsCheckBox.onchange = function(event){
-			let stats = document.getElementById('statsContainer');
-			stats.style.display = (event.target.checked) ? "block" : "none";
-		}
-	}
+	// let matchViewportResolutionCheckBox = document.getElementById('match-viewport-res-tgl');
+	// if (matchViewportResolutionCheckBox != null) {
+	//     matchViewportResolutionCheckBox.onchange = function (event) {
+	//         matchViewportResolution = matchViewportResolutionCheckBox.checked;
+	//     }
+	// }
 
-	var kickButton = document.getElementById('kick-other-players-button');
-	if(kickButton) {
-		kickButton.onclick = function(event){
-			socket.emit('kick', {});
-		}
-	}
+    // let statsCheckBox = document.getElementById('show-stats-tgl');
+	// if (statsCheckBox != null) {
+	// 	statsCheckBox.onchange = function(event){
+	// 		let stats = document.getElementById('statsContainer');
+	// 		stats.style.display = (event.target.checked) ? "block" : "none";
+	// 	}
+	// }
+
+	// var kickButton = document.getElementById('kick-other-players-button');
+	// if(kickButton) {
+	// 	kickButton.onclick = function(event){
+	// 		socket.emit('kick', {});
+	// 	}
+	// }
 }
 
 function sendQualityConsoleCommands(descriptor) {
@@ -1166,6 +1170,7 @@ function onExpandOverlay_Click() {
 	}
 }
 
+// TODO: connectだけ呼べば良さそう
 function start() {
 	let statsDiv = document.getElementById("stats");
 	if(statsDiv){
@@ -1261,13 +1266,17 @@ function onClientConfig(clientConfig) {
 }
 
 function load() {
-	setupHtmlEvents();
-    registerKeyboardEvents();
-    start();
+	// TODO: setupHtmlEventsはコントロール系なのでなくても大丈夫
+    // setupHtmlEvents();
+
+    // TODO: これはいる
+	registerKeyboardEvents();
+    // start();
 }
 
 module.exports = {
 	load,
+	connect,
 	addResponseEventListener,
 	removeResponseEventListener,
 	emitUIInteraction,

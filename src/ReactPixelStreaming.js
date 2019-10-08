@@ -18,8 +18,9 @@ export default class ReactPixelStreaming extends Component {
       suppressBrowserKeys: PixelStreamingClient.suppressBrowserKeys,
       fakeMouseWithTouches: PixelStreamingClient.fakeMouseWithTouches,
       logs: [123, 456],
-      webrtcState: "connect",
-      webRtcPlayerObj: PixelStreamingClient.webRtcPlayerObj
+      webrtcState: "connecting",
+      webRtcPlayerObj: PixelStreamingClient.webRtcPlayerObj,
+      connect: PixelStreamingClient.connect,
     };
   }
 
@@ -46,7 +47,7 @@ export default class ReactPixelStreaming extends Component {
       <PixelStreamingContext.Provider value={this.state}>
         <div style={this.props.style}>
           <PixelStreamingContext.Consumer>
-            {context => <PixelWindow webrtcState load={context.load} />}
+            {context => <PixelWindow load={context.load} connect={context.connect} />}
           </PixelStreamingContext.Consumer>
           {this.props.children}
         </div>
