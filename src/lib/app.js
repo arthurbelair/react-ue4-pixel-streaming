@@ -26,6 +26,7 @@ function log(str) {
     console.log(`${Math.floor(Date.now() - t0)}: ` + str);
 }
 
+// TODO: PlayerComponentに移植
 function setupHtmlEvents(){
 	//Window events
 	window.addEventListener('resize', resizePlayerStyle, true);
@@ -163,8 +164,13 @@ function sendQualityConsoleCommands(descriptor) {
     }
 }
 
+
+// TODO: View関連: WebRTCの接続状態に応じてPlayerの表示を切り替えるFunction
+// class, htmlElement, handlerを引数にとる
 function setOverlay(htmlClass, htmlElement, onClickFunction){
 	var videoPlayOverlay = document.getElementById('videoPlayOverlay');
+
+	// videoPlayOverlayが存在してなければ、element作ってそこに追加する
 	if(!videoPlayOverlay){
 		var playerDiv = document.getElementById('player');
 		videoPlayOverlay = document.createElement('div');
@@ -172,14 +178,17 @@ function setOverlay(htmlClass, htmlElement, onClickFunction){
 		playerDiv.appendChild(videoPlayOverlay);
 	}
 
+	// videoPlayOverlayに子供エレメント存在してれば削除
 	// Remove existing html child elements so we can add the new one
 	while (videoPlayOverlay.lastChild) {
   		videoPlayOverlay.removeChild(videoPlayOverlay.lastChild);
 	}
 
+	// append
 	if(htmlElement)
 		videoPlayOverlay.appendChild(htmlElement);
 
+	// 子供にfunctionを追加
 	if(onClickFunction){
 		videoPlayOverlay.addEventListener('click', function onOverlayClick(event){
 			onClickFunction(event);
@@ -188,6 +197,7 @@ function setOverlay(htmlClass, htmlElement, onClickFunction){
 	}
 
 	// Remove existing html classes so we can set the new one
+	// classを張り替え
 	var cl = videoPlayOverlay.classList;
 	for( var i = cl.length-1; i >= 0; i-- ) {
 	    cl.remove( cl[i] );
@@ -196,6 +206,7 @@ function setOverlay(htmlClass, htmlElement, onClickFunction){
 	videoPlayOverlay.classList.add(htmlClass);
 }
 
+// TODO: View関連: 接続画面 -> PlayerComponentに移植
 function showConnectOverlay(){
 	var startText = document.createElement('div');
 	startText.id = 'playButton';
@@ -206,6 +217,7 @@ function showConnectOverlay(){
 	});
 }
 
+// TODO: View関連: PlayerComponentに移植
 function showTextOverlay(text){
 	var textOverlay = document.createElement('div');
 	textOverlay.id = 'messageOverlay';
@@ -213,6 +225,7 @@ function showTextOverlay(text){
 	setOverlay('textDisplayState', textOverlay);
 }
 
+// TODO: View関連: 再生画面 -> PlayerComponentに移植
 function showPlayOverlay(){
 	var img = document.createElement('img');
 	img.id = 'playButton';
@@ -232,6 +245,7 @@ function hideOverlay(){
 	setOverlay('hiddenState');
 }
 
+// TODO: WebRTCに接続するためのfunction
 function createWebRtcOffer(){
 	if(webRtcPlayerObj){
 		console.log('Creating offer');
@@ -248,10 +262,12 @@ function sendInputData(data){
 		webRtcPlayerObj.send(data);
     }
 
+// TODO: ListenerはHOCにバインド
 function addResponseEventListener(name, listener) {
 	responseEventListeners.set(name, listener);
 }
 
+// TODO: ListenerはHOCにバインド
 function removeResponseEventListener(name) {
 	responseEventListeners.remove(name);
 }
@@ -262,8 +278,11 @@ const ToClientMessageType = {
 	Response: 1
 };
 
+// TODO: プレイヤーの組み立て
 function setupWebRtcPlayer(htmlElement, clientConfig){
-    webRtcPlayerObj = new webRtcPlayer({peerConnectionOptions: clientConfig.peerConnectionOptions});
+	webRtcPlayerObj = new webRtcPlayer({peerConnectionOptions: clientConfig.peerConnectionOptions});
+	
+	// webRtcPlayerObj.videoがElement
     htmlElement.appendChild(webRtcPlayerObj.video);
 
     webRtcPlayerObj.onWebRtcOffer = function (offer) {
@@ -385,6 +404,9 @@ function setupWebRtcPlayer(htmlElement, clientConfig){
     return webRtcPlayerObj.video;
 }
 
+
+
+// 表示のレイアウトの制御関連
 var styleWidth;
 var styleHeight;
 var styleTop;
