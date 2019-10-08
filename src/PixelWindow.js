@@ -14,6 +14,7 @@ class PixelWindow extends React.Component {
     this.props.load();
 
     // 黙ってconnect()
+    // TODO: connectの状態をstateに反映できるように改修
     this.props.connect();
   }
 

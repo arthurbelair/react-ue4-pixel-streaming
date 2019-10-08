@@ -134,6 +134,7 @@ function setupHtmlEvents(){
 	// }
 }
 
+// TODO: クオリティコントロール系のaction: コンポーネントに移植してok
 function sendQualityConsoleCommands(descriptor) {
     if (descriptor.PrioritiseQuality != null) {
         var command = 'Streamer.PrioritiseQuality ' + descriptor.PrioritiseQuality;
@@ -171,6 +172,7 @@ function sendQualityConsoleCommands(descriptor) {
 
 // TODO: View関連: WebRTCの接続状態に応じてPlayerの表示を切り替えるFunction
 // class, htmlElement, handlerを引数にとる
+// ReactComponentのPixelWindow.jsに移植中
 function setOverlay(htmlClass, htmlElement, onClickFunction){
 	var videoPlayOverlay = document.getElementById('videoPlayOverlay');
 
