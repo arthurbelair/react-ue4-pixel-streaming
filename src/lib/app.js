@@ -206,6 +206,8 @@ function setOverlay(htmlClass, htmlElement, onClickFunction){
 	videoPlayOverlay.classList.add(htmlClass);
 }
 
+// TODO: setOverlayをplayerに移植
+
 // TODO: View関連: 接続画面 -> PlayerComponentに移植
 function showConnectOverlay(){
 	var startText = document.createElement('div');
@@ -1274,4 +1276,5 @@ module.exports = {
 	controlScheme: 	inputOptions.controlScheme,
 	suppressBrowserKeys: inputOptions.suppressBrowserKeys,
 	fakeMouseWithTouches: inputOptions.fakeMouseWithTouches,
+	webRtcPlayerObj: webRtcPlayerObj,
 };

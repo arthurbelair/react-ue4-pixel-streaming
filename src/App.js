@@ -12,7 +12,7 @@ class App extends React.Component{
         return(
         <div>
             <ReactPixelStreaming>
-                <PixelLogWindow />
+                <PixelLogWindow webrtcState="ready"/>
             </ReactPixelStreaming>
         </div>
         )

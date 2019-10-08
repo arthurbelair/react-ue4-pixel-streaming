@@ -19,7 +19,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "transpile": "babel src -d dist --copy-files"
+    "transpile": "babel src -d dist --copy-files",
+    "demoStart": "webpack-dev-server --mode development"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -42,6 +43,12 @@
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
-    "rollup": "^1.21.2"
+    "css-loader": "^3.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "rollup": "^1.21.2",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2"
   }
 }
