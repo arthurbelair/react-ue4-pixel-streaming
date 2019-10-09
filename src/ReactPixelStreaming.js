@@ -18,11 +18,20 @@ export default class ReactPixelStreaming extends Component {
       suppressBrowserKeys: PixelStreamingClient.suppressBrowserKeys,
       fakeMouseWithTouches: PixelStreamingClient.fakeMouseWithTouches,
       logs: [123, 456],
-      webrtcState: "connecting",
+      webrtcState: "",
       webRtcPlayerObj: PixelStreamingClient.webRtcPlayerObj,
       connect: PixelStreamingClient.connect,
+      actions: {
+        updateWebRTCStat: this.updateWebRTCStat
+      }
     };
   }
+
+  updateWebRTCStat = webrtcStat => {
+    this.setState({
+      webrtcState: webrtcStat
+    });
+  };
 
   componentDidMount() {
     //        this.state.addResponseEventListener("handle_responses", this.props.handler);
@@ -47,7 +56,14 @@ export default class ReactPixelStreaming extends Component {
       <PixelStreamingContext.Provider value={this.state}>
         <div style={this.props.style}>
           <PixelStreamingContext.Consumer>
-            {context => <PixelWindow load={context.load} connect={context.connect} />}
+            {context => (
+              <PixelWindow
+                load={context.load}
+                updateWebRTCStat={context.actions.updateWebRTCStat}
+                connect={context.connect}
+                host="localhost"
+              />
+            )}
           </PixelStreamingContext.Consumer>
           {this.props.children}
         </div>

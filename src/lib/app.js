@@ -287,6 +287,7 @@ const ToClientMessageType = {
 };
 
 // TODO: プレイヤーの組み立て
+// コンポーネント化する
 function setupWebRtcPlayer(htmlElement, clientConfig){
 	webRtcPlayerObj = new webRtcPlayer({peerConnectionOptions: clientConfig.peerConnectionOptions});
 	
@@ -484,6 +485,7 @@ function resizePlayerStyleToFillWindow(playerElement) {
     }
 }
 
+// TODO: resize系はCSS-in-JSで処理する
 function resizePlayerStyleToActualSize(playerElement) {
     let videoElement = playerElement.getElementsByTagName("VIDEO");
 
@@ -502,6 +504,7 @@ function resizePlayerStyleToArbitrarySize(playerElement) {
     playerElement.style = "top: 0px; left: 0px; width: " + styleWidth + "px; height: " + styleHeight + "px; cursor: " + styleCursor + "; " + styleAdditional;
 }
 
+// TODO: resize系はCSS-in-JSで処理する
 function resizePlayerStyle(event) {
 	var playerElement = document.getElementById('player');
 	
@@ -1187,33 +1190,46 @@ function start() {
 	}
 }
 
-function connect() {
-	socket = io();
+function connect(host, callback) {
+	socket = io(host);
+	callback("socketConnecting");
 
+　　// clientConfig帰ってきたらwebRTCセッションを貼ってplayerをインスタンス化する
+    // TODO: onClientConfigをStateに修正
 	socket.on('clientConfig', function (clientConfig) {
 		onClientConfig(clientConfig);
 	});
+
 
 	socket.on('message', function (data) {
 		console.log(`unrecognised message ${data.byteLength}: ${data.slice(0, 50).toString("hex")}`);
 	});
 
-	socket.on('clientCount', function (data) {
-		var kickButton = document.getElementById('kick-other-players-button');
-		if (kickButton)
-			kickButton.value = `Kick (${data.count})`;
-	});
+	// TODO: キックは後で見る
+	// socket.on('clientCount', function (data) {
+	// 	var kickButton = document.getElementById('kick-other-players-button');
+	// 	if (kickButton)
+	// 		kickButton.value = `Kick (${data.count})`;
+	// });
 
+	// signaling serverに繫がったらuserconfigを送る
+	// signaling serverからはclientConfig返ってくる
 	socket.on('connect', () => {
+		callback("socketConnected");
+
 		log("connected");
-		sendUserConfig();
+		sendUserConfig(callback);
 	});
 
 	socket.on('error', (error) => {
+		callback(error);
 		console.log(`WS error ${error}`);
 	});
 
+	// TODO: 状態変わるのでcallbackを追加
 	socket.on('disconnect', (reason) => {
+		callback("socketDisConnected");
+
 		console.log(`Connection is closed: ${reason}`);
 		socket.close();
 		socket = undefined;
@@ -1227,19 +1243,23 @@ function connect() {
 			webRtcPlayerObj = undefined;
 		}
 
-		start();
+	    // reconnect
+		// start();
+		connect(host, callback);
 	});
 }
 
 /**
  * Config data to sent to the Cirrus web server.
  */
-function sendUserConfig() {
+
+function sendUserConfig(callback) {
 	let userConfig = {
 		emitData: 'ArrayBuffer'
 	};
 	let userConfigString = JSON.stringify(userConfig);
 	log(`userConfig = ${userConfigString}`);
+	callback("webrtcConnecting");
 	socket.emit('userConfig', userConfigString);
 }
 
@@ -1247,12 +1267,16 @@ function sendUserConfig() {
  * Config data received from WebRTC sender via the Cirrus web server
  */
 function onClientConfig(clientConfig) {
+	console.log(clientConfig);
 	log(`clientConfig = ${JSON.stringify(clientConfig)}`);
 
 	let playerDiv = document.getElementById('player');
+
+	// TODO: jsxに移植
 	let playerElement = setupWebRtcPlayer(playerDiv, clientConfig)
 	resizePlayerStyle();
 
+	// TODO: マウス設定
 	switch (inputOptions.controlScheme) {
 		case ControlSchemeType.HoveringMouse:
 			registerHoveringMouseEvents(playerElement);
@@ -1288,4 +1312,5 @@ module.exports = {
 	suppressBrowserKeys: inputOptions.suppressBrowserKeys,
 	fakeMouseWithTouches: inputOptions.fakeMouseWithTouches,
 	webRtcPlayerObj: webRtcPlayerObj,
+	socket: socket,
 };

@@ -43,3 +43,11 @@ const YourComponent = () => (
 
 export default App;
 ```
+
+
+# for Component Develop
+
+```
+npm install
+npm run demoStart
+```

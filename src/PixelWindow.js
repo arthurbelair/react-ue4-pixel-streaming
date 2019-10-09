@@ -15,7 +15,8 @@ class PixelWindow extends React.Component {
 
     // 黙ってconnect()
     // TODO: connectの状態をstateに反映できるように改修
-    this.props.connect();
+    // TODO: 接続ホストを引数で渡せるように修正
+    this.props.connect(this.props.host, this.props.updateWebRTCStat);
   }
 
   componentWillUnmount() {}
@@ -51,4 +52,5 @@ const PlayerComponent = webrtcState => {
   if (webrtcState === "connected") return <div>{webrtcState}</div>;
   if (webrtcState === "playing") return <div>{webrtcState}</div>;
   if (webrtcState === "stop") return <div>{webrtcState}</div>;
+  return <div>{webrtcState}</div>
 };
