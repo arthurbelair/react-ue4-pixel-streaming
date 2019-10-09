@@ -8,6 +8,7 @@ export default class ReactPixelStreaming extends Component {
     super(props);
     this.state = {
       load: PixelStreamingClient.load,
+      responseEventListeners: PixelStreamingClient.responseEventListeners,
       addResponseEventListener: PixelStreamingClient.addResponseEventListener,
       removeResponseEventListener:
         PixelStreamingClient.removeResponseEventListener,
@@ -19,10 +20,16 @@ export default class ReactPixelStreaming extends Component {
       fakeMouseWithTouches: PixelStreamingClient.fakeMouseWithTouches,
       logs: [123, 456],
       webrtcState: "",
+      // webRtcPlayerObjをstate化
       webRtcPlayerObj: PixelStreamingClient.webRtcPlayerObj,
+      webRtcPlayer: PixelStreamingClient.webRtcPlayer,
       connect: PixelStreamingClient.connect,
+      clientConfig: "",
+      socket: {},
       actions: {
-        updateWebRTCStat: this.updateWebRTCStat
+        updateWebRTCStat: this.updateWebRTCStat,
+        updateClientConfig: this.updateClientConfig,
+        updateSocket: this.updateSocket,
       }
     };
   }
@@ -32,6 +39,21 @@ export default class ReactPixelStreaming extends Component {
       webrtcState: webrtcStat
     });
   };
+
+  updateSocket = socket => {
+    this.setState({
+      socket: socket,
+    });
+  };
+
+
+  updateClientConfig = clientConfig => {
+    console.log(clientConfig);
+    this.setState({
+      clientConfig: clientConfig
+    });
+  };
+
 
   componentDidMount() {
     //        this.state.addResponseEventListener("handle_responses", this.props.handler);
@@ -44,14 +66,6 @@ export default class ReactPixelStreaming extends Component {
   }
 
   render() {
-    const {
-      load,
-      addResponseEventListener,
-      removeResponseEventListener,
-      emmitCommand,
-      emmitDescriptor,
-      emmitUIInteraction
-    } = this.state;
     return (
       <PixelStreamingContext.Provider value={this.state}>
         <div style={this.props.style}>
@@ -59,7 +73,7 @@ export default class ReactPixelStreaming extends Component {
             {context => (
               <PixelWindow
                 load={context.load}
-                updateWebRTCStat={context.actions.updateWebRTCStat}
+                actions={context.actions}
                 connect={context.connect}
                 host="localhost"
               />

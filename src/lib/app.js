@@ -220,9 +220,9 @@ function showConnectOverlay(){
 	startText.id = 'playButton';
 	startText.innerHTML = 'Click to start';
 
-	setOverlay('clickableState', startText, event => {
-		connect();
-	});
+	// setOverlay('clickableState', startText, event => {
+	// 	connect();
+	// });
 }
 
 // TODO: View関連: PlayerComponentに移植
@@ -287,7 +287,7 @@ const ToClientMessageType = {
 };
 
 // TODO: プレイヤーの組み立て
-// コンポーネント化する
+// video streamコンポーネント化する
 function setupWebRtcPlayer(htmlElement, clientConfig){
 	webRtcPlayerObj = new webRtcPlayer({peerConnectionOptions: clientConfig.peerConnectionOptions});
 	
@@ -1176,28 +1176,32 @@ function onExpandOverlay_Click() {
 }
 
 // TODO: connectだけ呼べば良さそう
-function start() {
-	let statsDiv = document.getElementById("stats");
-	if(statsDiv){
-		statsDiv.innerHTML = 'Not connected';
-	}
+// function start() {
+// 	let statsDiv = document.getElementById("stats");
+// 	if(statsDiv){
+// 		statsDiv.innerHTML = 'Not connected';
+// 	}
 				
-	if (!connect_on_load || is_reconnection){
-		showConnectOverlay();
-		resizePlayerStyle();
-	} else {
-		connect();
-	}
-}
+// 	if (!connect_on_load || is_reconnection){
+// 		showConnectOverlay();
+// 		resizePlayerStyle();
+// 	} else {
+// 		connect();
+// 	}
+// }
 
-function connect(host, callback) {
+function connect(host, actions) {
 	socket = io(host);
-	callback("socketConnecting");
+
+	actions.updateSocket(socket);
+	actions.updateWebRTCStat("socketConnecting");
 
 　　// clientConfig帰ってきたらwebRTCセッションを貼ってplayerをインスタンス化する
     // TODO: onClientConfigをStateに修正
 	socket.on('clientConfig', function (clientConfig) {
-		onClientConfig(clientConfig);
+		// onClientConfig(clientConfig);
+		console.log(actions);
+		actions.updateClientConfig(clientConfig);
 	});
 
 
@@ -1215,20 +1219,20 @@ function connect(host, callback) {
 	// signaling serverに繫がったらuserconfigを送る
 	// signaling serverからはclientConfig返ってくる
 	socket.on('connect', () => {
-		callback("socketConnected");
+		actions.updateWebRTCStat("socketConnected");
 
 		log("connected");
-		sendUserConfig(callback);
+		sendUserConfig(actions);
 	});
 
 	socket.on('error', (error) => {
-		callback(error);
+		actions.updateWebRTCStat(error);
 		console.log(`WS error ${error}`);
 	});
 
 	// TODO: 状態変わるのでcallbackを追加
 	socket.on('disconnect', (reason) => {
-		callback("socketDisConnected");
+		actions.updateWebRTCStat("socketDisConnected");
 
 		console.log(`Connection is closed: ${reason}`);
 		socket.close();
@@ -1245,7 +1249,7 @@ function connect(host, callback) {
 
 	    // reconnect
 		// start();
-		connect(host, callback);
+		connect(host, actions);
 	});
 }
 
@@ -1253,28 +1257,28 @@ function connect(host, callback) {
  * Config data to sent to the Cirrus web server.
  */
 
-function sendUserConfig(callback) {
+function sendUserConfig(actions) {
 	let userConfig = {
 		emitData: 'ArrayBuffer'
 	};
 	let userConfigString = JSON.stringify(userConfig);
 	log(`userConfig = ${userConfigString}`);
-	callback("webrtcConnecting");
+	actions.updateWebRTCStat("webrtcConnecting");
 	socket.emit('userConfig', userConfigString);
 }
 
 /**
  * Config data received from WebRTC sender via the Cirrus web server
  */
+// TODO: clientConfigをstateに突っ込む
 function onClientConfig(clientConfig) {
-	console.log(clientConfig);
 	log(`clientConfig = ${JSON.stringify(clientConfig)}`);
 
-	let playerDiv = document.getElementById('player');
+	// let playerDiv = document.getElementById('player');
 
 	// TODO: jsxに移植
 	let playerElement = setupWebRtcPlayer(playerDiv, clientConfig)
-	resizePlayerStyle();
+	// resizePlayerStyle();
 
 	// TODO: マウス設定
 	switch (inputOptions.controlScheme) {
@@ -1312,5 +1316,7 @@ module.exports = {
 	suppressBrowserKeys: inputOptions.suppressBrowserKeys,
 	fakeMouseWithTouches: inputOptions.fakeMouseWithTouches,
 	webRtcPlayerObj: webRtcPlayerObj,
-	socket: socket,
+	webRtcPlayer: webRtcPlayer,
+//	socket: socket,
+	responseEventListeners: responseEventListeners,
 };
