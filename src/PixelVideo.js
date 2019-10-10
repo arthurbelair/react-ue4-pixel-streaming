@@ -10,18 +10,16 @@ class PixelVideo extends React.Component {
   }
 
   componentDidMount() {
-    const webRtcPlayerObj = new this.props.webRtcPlayer({
+    let webRtcPlayerObj = new this.props.webRtcPlayer({
       peerConnectionOptions: this.props.clientConfig.peerConnectionOptions
     });
+
     this.setState({
       webRtcPlayerObj: webRtcPlayerObj
     });
 
     // Elementを挿入
     this.refs.video.appendChild(webRtcPlayerObj.video);
-
-    // // WebRTC Offering
-    // webRtcPlayerObj.createOffer();
 
     // webRtcPlayerにeventとか設定
     atacheEvents(
@@ -50,11 +48,13 @@ export default PixelVideo;
 function atacheEvents(webRtcPlayerObj, socket, responseEventListeners) {
   // webrtc-offerで疎通開始
   webRtcPlayerObj.onWebRtcOffer = function(offer) {
+    console.log("offer");
     socket.emit("webrtc-offer", offer);
   };
 
   // webrtc-iceで認証
   webRtcPlayerObj.onWebRtcCandidate = function(candidate) {
+    console.log("emit webrtc-ice");
     socket.emit("webrtc-ice", candidate);
   };
 
@@ -81,13 +81,15 @@ function atacheEvents(webRtcPlayerObj, socket, responseEventListeners) {
   //          これは現在使用されていませんが、このクラスから外部から呼び出されます
 	socket.on('webrtc-ice', function(iceCandidate) {
     //console.log(iceCandidate);
-		if(iceCandidate)
-		 	webRtcPlayerObj.handleCandidateFromServer(iceCandidate);
+    console.log("recive webrtc-ice");
+		// if(iceCandidate)
+		//  	webRtcPlayerObj.handleCandidateFromServer(iceCandidate);
 	});
 
 
   // DataChannel受信時イベントとユーザ定義ハンドラーのバインド
   webRtcPlayerObj.onDataChannelMessage = function(data) {
+    console.log("ondata channel message");
     var view = new Uint8Array(data);
     if (view[0] == ToClientMessageType.QualityControlOwnership) {
       let ownership = view[1] == 0 ? false : true;
@@ -110,6 +112,7 @@ function atacheEvents(webRtcPlayerObj, socket, responseEventListeners) {
     // webRtcからのレスポンス受信時の統計
     // 多分いらん
     socket.on("webrtc-answer", function(webRTCData) {
+      console.log("on webrtc-answer");
       webRtcPlayerObj.receiveAnswer(webRTCData);
       let printInterval = 5 * 60 * 1000; /*Print every 5 minutes*/
       let nextPrintDuration = printInterval;
