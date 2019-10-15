@@ -29,7 +29,7 @@ class PixelWindow extends React.Component {
           <div id="videoPlayOverlay">
             <PixelStreamingContext.Consumer>
                 {context => 
-                    context.webrtcState === "webrtcConnecting" ?
+                    context.clientConfig?
                       <PixelVideo
                         clientConfig={context.clientConfig}
                         webRtcPlayer={context.webRtcPlayer}

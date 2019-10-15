@@ -10,6 +10,7 @@ class PixelVideo extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.clientConfig.peerConnectionOptions);
     let webRtcPlayerObj = new this.props.webRtcPlayer({
       peerConnectionOptions: this.props.clientConfig.peerConnectionOptions
     });
@@ -78,13 +79,11 @@ function atacheEvents(webRtcPlayerObj, socket, responseEventListeners) {
   // TODO: エラー出るのでコメントアウト
   //    メモ: これは、オファーの一部ではなく、新しいアイス候補を個別に受け取るときに呼び出されます
   //          これは現在使用されていませんが、このクラスから外部から呼び出されます
-	socket.on('webrtc-ice', function(iceCandidate) {
+  socket.on("webrtc-ice", function(iceCandidate) {
     //console.log(iceCandidate);
     // console.log("recive webrtc-ice");
-		if(iceCandidate)
-		 	webRtcPlayerObj.handleCandidateFromServer(iceCandidate);
-	});
-
+    if (iceCandidate) webRtcPlayerObj.handleCandidateFromServer(iceCandidate);
+  });
 
   // DataChannel受信時イベントとユーザ定義ハンドラーのバインド
   webRtcPlayerObj.onDataChannelMessage = function(data) {
@@ -107,124 +106,123 @@ function atacheEvents(webRtcPlayerObj, socket, responseEventListeners) {
         listener(response);
       }
     }
-
-    // webRtcからのレスポンス受信時の統計
-    // 多分いらん
-    socket.on("webrtc-answer", function(webRTCData) {
-      console.log("on webrtc-answer");
-      webRtcPlayerObj.receiveAnswer(webRTCData);
-      let printInterval = 5 * 60 * 1000; /*Print every 5 minutes*/
-      let nextPrintDuration = printInterval;
-
-      webRtcPlayerObj.onAggregatedStats = aggregatedStats => {
-        let numberFormat = new Intl.NumberFormat(window.navigator.language, {
-          maximumFractionDigits: 0
-        });
-        let timeFormat = new Intl.NumberFormat(window.navigator.language, {
-          maximumFractionDigits: 0,
-          minimumIntegerDigits: 2
-        });
-        let statsText = "";
-
-        // Calculate duration of run
-        let runTime =
-          (aggregatedStats.timestamp - aggregatedStats.timestampStart) / 1000;
-        let timeValues = [];
-        let timeDurations = [60, 60];
-        for (let timeIndex = 0; timeIndex < timeDurations.length; timeIndex++) {
-          timeValues.push(runTime % timeDurations[timeIndex]);
-          runTime = runTime / timeDurations[timeIndex];
-        }
-        timeValues.push(runTime);
-
-        let runTimeSeconds = timeValues[0];
-        let runTimeMinutes = Math.floor(timeValues[1]);
-        let runTimeHours = Math.floor([timeValues[2]]);
-
-        let receivedBytesMeasurement = "B";
-        let receivedBytes = aggregatedStats.hasOwnProperty("bytesReceived")
-          ? aggregatedStats.bytesReceived
-          : 0;
-        let dataMeasurements = ["kB", "MB", "GB"];
-        for (let index = 0; index < dataMeasurements.length; index++) {
-          if (receivedBytes < 100 * 1000) break;
-          receivedBytes = receivedBytes / 1000;
-          receivedBytesMeasurement = dataMeasurements[index];
-        }
-
-        statsText += `Duration: ${timeFormat.format(
-          runTimeHours
-        )}:${timeFormat.format(runTimeMinutes)}:${timeFormat.format(
-          runTimeSeconds
-        )}</br>`;
-        statsText += `Video Resolution: ${
-          aggregatedStats.hasOwnProperty("frameWidth") &&
-          aggregatedStats.frameWidth &&
-          aggregatedStats.hasOwnProperty("frameHeight") &&
-          aggregatedStats.frameHeight
-            ? aggregatedStats.frameWidth + "x" + aggregatedStats.frameHeight
-            : "N/A"
-        }</br>`;
-        statsText += `Received (${receivedBytesMeasurement}): ${numberFormat.format(
-          receivedBytes
-        )}</br>`;
-        statsText += `Frames Decoded: ${
-          aggregatedStats.hasOwnProperty("framesDecoded")
-            ? numberFormat.format(aggregatedStats.framesDecoded)
-            : "N/A"
-        }</br>`;
-        statsText += `Packets Lost: ${
-          aggregatedStats.hasOwnProperty("packetsLost")
-            ? numberFormat.format(aggregatedStats.packetsLost)
-            : "N/A"
-        }</br>`;
-        statsText += `Bitrate (kbps): ${
-          aggregatedStats.hasOwnProperty("bitrate")
-            ? numberFormat.format(aggregatedStats.bitrate)
-            : "N/A"
-        }</br>`;
-        statsText += `Framerate: ${
-          aggregatedStats.hasOwnProperty("framerate")
-            ? numberFormat.format(aggregatedStats.framerate)
-            : "N/A"
-        }</br>`;
-        statsText += `Frames dropped: ${
-          aggregatedStats.hasOwnProperty("framesDropped")
-            ? numberFormat.format(aggregatedStats.framesDropped)
-            : "N/A"
-        }</br>`;
-        statsText += `Latency (ms): ${
-          aggregatedStats.hasOwnProperty("currentRoundTripTime")
-            ? numberFormat.format(aggregatedStats.currentRoundTripTime * 1000)
-            : "N/A"
-        }</br>`;
-
-        let statsDiv = document.getElementById("stats");
-        if (statsDiv) {
-          statsDiv.innerHTML = statsText;
-        }
-
-        if (print_stats) {
-          if (aggregatedStats.timestampStart) {
-            if (
-              aggregatedStats.timestamp - aggregatedStats.timestampStart >
-              nextPrintDuration
-            ) {
-              console.log(JSON.stringify(aggregatedStats));
-              if (socket.connected)
-                socket.emit("webrtc-stats", aggregatedStats);
-              nextPrintDuration += printInterval;
-            }
-          }
-        }
-      };
-
-      webRtcPlayerObj.aggregateStats(1 * 1000 /*Check every 1 second*/);
-
-      let displayStats = () => { webRtcPlayerObj.getStats( (s) => { s.forEach(stat => { console.log(JSON.stringify(stat)); }); } ); }
-      var displayStatsIntervalId = setInterval(displayStats, 30 * 1000);
-    });
   };
+
+  // webRtcからのレスポンス受信時の統計
+  socket.on("webrtc-answer", function(webRTCData) {
+    console.log("on webrtc-answer");
+    webRtcPlayerObj.receiveAnswer(webRTCData);
+    // let printInterval = 5 * 60 * 1000; /*Print every 5 minutes*/
+    // let nextPrintDuration = printInterval;
+
+    // webRtcPlayerObj.onAggregatedStats = aggregatedStats => {
+    //   let numberFormat = new Intl.NumberFormat(window.navigator.language, {
+    //     maximumFractionDigits: 0
+    //   });
+    //   let timeFormat = new Intl.NumberFormat(window.navigator.language, {
+    //     maximumFractionDigits: 0,
+    //     minimumIntegerDigits: 2
+    //   });
+    //   let statsText = "";
+
+    //   // Calculate duration of run
+    //   let runTime =
+    //     (aggregatedStats.timestamp - aggregatedStats.timestampStart) / 1000;
+    //   let timeValues = [];
+    //   let timeDurations = [60, 60];
+    //   for (let timeIndex = 0; timeIndex < timeDurations.length; timeIndex++) {
+    //     timeValues.push(runTime % timeDurations[timeIndex]);
+    //     runTime = runTime / timeDurations[timeIndex];
+    //   }
+    //   timeValues.push(runTime);
+
+    //   let runTimeSeconds = timeValues[0];
+    //   let runTimeMinutes = Math.floor(timeValues[1]);
+    //   let runTimeHours = Math.floor([timeValues[2]]);
+
+    //   let receivedBytesMeasurement = "B";
+    //   let receivedBytes = aggregatedStats.hasOwnProperty("bytesReceived")
+    //     ? aggregatedStats.bytesReceived
+    //     : 0;
+    //   let dataMeasurements = ["kB", "MB", "GB"];
+    //   for (let index = 0; index < dataMeasurements.length; index++) {
+    //     if (receivedBytes < 100 * 1000) break;
+    //     receivedBytes = receivedBytes / 1000;
+    //     receivedBytesMeasurement = dataMeasurements[index];
+    //   }
+
+    //   statsText += `Duration: ${timeFormat.format(
+    //     runTimeHours
+    //   )}:${timeFormat.format(runTimeMinutes)}:${timeFormat.format(
+    //     runTimeSeconds
+    //   )}</br>`;
+    //   statsText += `Video Resolution: ${
+    //     aggregatedStats.hasOwnProperty("frameWidth") &&
+    //     aggregatedStats.frameWidth &&
+    //     aggregatedStats.hasOwnProperty("frameHeight") &&
+    //     aggregatedStats.frameHeight
+    //       ? aggregatedStats.frameWidth + "x" + aggregatedStats.frameHeight
+    //       : "N/A"
+    //   }</br>`;
+    //   statsText += `Received (${receivedBytesMeasurement}): ${numberFormat.format(
+    //     receivedBytes
+    //   )}</br>`;
+    //   statsText += `Frames Decoded: ${
+    //     aggregatedStats.hasOwnProperty("framesDecoded")
+    //       ? numberFormat.format(aggregatedStats.framesDecoded)
+    //       : "N/A"
+    //   }</br>`;
+    //   statsText += `Packets Lost: ${
+    //     aggregatedStats.hasOwnProperty("packetsLost")
+    //       ? numberFormat.format(aggregatedStats.packetsLost)
+    //       : "N/A"
+    //   }</br>`;
+    //   statsText += `Bitrate (kbps): ${
+    //     aggregatedStats.hasOwnProperty("bitrate")
+    //       ? numberFormat.format(aggregatedStats.bitrate)
+    //       : "N/A"
+    //   }</br>`;
+    //   statsText += `Framerate: ${
+    //     aggregatedStats.hasOwnProperty("framerate")
+    //       ? numberFormat.format(aggregatedStats.framerate)
+    //       : "N/A"
+    //   }</br>`;
+    //   statsText += `Frames dropped: ${
+    //     aggregatedStats.hasOwnProperty("framesDropped")
+    //       ? numberFormat.format(aggregatedStats.framesDropped)
+    //       : "N/A"
+    //   }</br>`;
+    //   statsText += `Latency (ms): ${
+    //     aggregatedStats.hasOwnProperty("currentRoundTripTime")
+    //       ? numberFormat.format(aggregatedStats.currentRoundTripTime * 1000)
+    //       : "N/A"
+    //   }</br>`;
+
+    //   let statsDiv = document.getElementById("stats");
+    //   if (statsDiv) {
+    //     statsDiv.innerHTML = statsText;
+    //   }
+
+    //   if (print_stats) {
+    //     if (aggregatedStats.timestampStart) {
+    //       if (
+    //         aggregatedStats.timestamp - aggregatedStats.timestampStart >
+    //         nextPrintDuration
+    //       ) {
+    //         console.log(JSON.stringify(aggregatedStats));
+    //         if (socket.connected)
+    //           socket.emit("webrtc-stats", aggregatedStats);
+    //         nextPrintDuration += printInterval;
+    //       }
+    //     }
+    //   }
+    // };
+
+    // webRtcPlayerObj.aggregateStats(1 * 1000 /*Check every 1 second*/);
+
+    // let displayStats = () => { webRtcPlayerObj.getStats( (s) => { s.forEach(stat => { console.log(JSON.stringify(stat)); }); } ); }
+    // var displayStatsIntervalId = setInterval(displayStats, 30 * 1000);
+  });
 
   // createOffer
   webRtcPlayerObj.createOffer();
@@ -266,10 +264,3 @@ var qualityControlOwnershipCheckBox;
 // 			break;
 // 	}
 // }
-
-
-
-
-
-
-

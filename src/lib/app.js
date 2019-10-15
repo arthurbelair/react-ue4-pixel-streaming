@@ -1200,7 +1200,7 @@ function connect(host, actions) {
     // TODO: onClientConfigをStateに修正
 	socket.on('clientConfig', function (clientConfig) {
 		// onClientConfig(clientConfig);
-		console.log(actions);
+		console.log("update clientConfig: " + clientConfig);
 		actions.updateClientConfig(clientConfig);
 	});
 
@@ -1235,17 +1235,17 @@ function connect(host, actions) {
 		actions.updateWebRTCStat("socketDisConnected");
 
 		console.log(`Connection is closed: ${reason}`);
-		socket.close();
-		socket = undefined;
-		is_reconnection = true;
+		// socket.close();
+		// socket = undefined;
+		// is_reconnection = true;
 
 		// destroy `webRtcPlayerObj` if any
-		let playerDiv = document.getElementById('player');
-		if (webRtcPlayerObj) {
-			playerDiv.removeChild(webRtcPlayerObj.video);
-			webRtcPlayerObj.close();
-			webRtcPlayerObj = undefined;
-		}
+		// let playerDiv = document.getElementById('player');
+		// if (webRtcPlayerObj) {
+		// 	playerDiv.removeChild(webRtcPlayerObj.video);
+		// 	webRtcPlayerObj.close();
+		// 	webRtcPlayerObj = undefined;
+		// }
 
 	    // reconnect
 		// start();
