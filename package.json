@@ -20,7 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "transpile": "babel src -d dist --copy-files",
-    "demoStart": "webpack-dev-server --mode development --hot --inline"
+    "demoStart": "webpack-dev-server --mode development --hot --inline --content-base ./"
   },
   "eslintConfig": {
     "extends": "react-app"
