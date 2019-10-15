@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PixelWindow from "./PixelWindow";
-import PixelStreamingClient from "./lib/app";
+import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 
 export default class ReactPixelStreaming extends Component {
