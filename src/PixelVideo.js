@@ -54,7 +54,6 @@ function atacheEvents(webRtcPlayerObj, socket, responseEventListeners) {
 
   // webrtc-iceで認証
   webRtcPlayerObj.onWebRtcCandidate = function(candidate) {
-    console.log("emit webrtc-ice");
     socket.emit("webrtc-ice", candidate);
   };
 
@@ -81,9 +80,9 @@ function atacheEvents(webRtcPlayerObj, socket, responseEventListeners) {
   //          これは現在使用されていませんが、このクラスから外部から呼び出されます
 	socket.on('webrtc-ice', function(iceCandidate) {
     //console.log(iceCandidate);
-    console.log("recive webrtc-ice");
-		// if(iceCandidate)
-		//  	webRtcPlayerObj.handleCandidateFromServer(iceCandidate);
+    // console.log("recive webrtc-ice");
+		if(iceCandidate)
+		 	webRtcPlayerObj.handleCandidateFromServer(iceCandidate);
 	});
 
 
