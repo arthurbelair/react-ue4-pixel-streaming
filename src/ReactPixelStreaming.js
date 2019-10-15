@@ -18,7 +18,6 @@ export default class ReactPixelStreaming extends Component {
       controlScheme: PixelStreamingClient.controlScheme,
       suppressBrowserKeys: PixelStreamingClient.suppressBrowserKeys,
       fakeMouseWithTouches: PixelStreamingClient.fakeMouseWithTouches,
-      logs: [123, 456],
       webrtcState: "",
       // webRtcPlayerObjをstate化
       webRtcPlayerObj: PixelStreamingClient.webRtcPlayerObj,
@@ -75,7 +74,7 @@ export default class ReactPixelStreaming extends Component {
                 load={context.load}
                 actions={context.actions}
                 connect={context.connect}
-                host="localhost"
+                host={this.props.webRtcHost}
               />
             )}
           </PixelStreamingContext.Consumer>

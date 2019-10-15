@@ -6,6 +6,6 @@ import PixelStreamingContext from "../../src/lib/pixel-streaming-context";
 import PixelLogWindow from '../../src/PixelLogWindow';
 
 const App = () => {
-   return <ReactPixelStreaming webrtcState="connect"/>
+   return <ReactPixelStreaming webRtcHost="localhost"/>
 }
 render(<App />, document.getElementById('root'));
