@@ -9,7 +9,7 @@ create-react-app your_react_project
 
 ```
 cd your_react_project
-npm install shogo-hab/PixelStreamingComponent#developPixelComponent --save
+npm install shogo-hab/react-ue4-pixel-streaming --save
 ```
 
 # 3. Example
