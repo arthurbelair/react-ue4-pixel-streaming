@@ -3,7 +3,7 @@ import PixelWindow from "./PixelWindow";
 import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import { Rnd } from "react-rnd";
-import { Paper, Button, AppBar, List, Container } from "@material-ui/core";
+import { Paper, Button, AppBar, List } from "@material-ui/core";
 
 export default class ReactPixelStreaming extends Component {
   constructor(props) {
@@ -36,8 +36,11 @@ export default class ReactPixelStreaming extends Component {
       // x/yを初期化しとかないとdragが計算できない
       x: 30,
       y: 30,
-      x2: 300,
-      y2: 300,
+      x2: 930,
+      y2: 30,
+      x3: 930,
+      y3: 174,
+      width: 900,
     };
   }
 
@@ -92,7 +95,8 @@ export default class ReactPixelStreaming extends Component {
                   }}
                 >
                   <Paper>
-                    <AppBar style={{ padding: 10 }}>Streaming Window</AppBar>
+                    {/* TODO: 最小化、最大化、オリジナルサイズボタンを追加 */}
+                    <AppBar style={{ position:"relative", padding: 10 }}>Streaming Window</AppBar>
                     <PixelWindow
                       load={context.load}
                       actions={context.actions}
@@ -128,6 +132,34 @@ export default class ReactPixelStreaming extends Component {
                     </Paper>
                   </Paper>
                 </Rnd>
+                <Rnd
+                  size={{ width: "200", height: "300" }}
+                  position={{ x: this.state.x3, y: this.state.y3 }}
+                  onDragStop={(e, d) => {
+                    this.setState({ x3: d.x, y3: d.y });
+                  }}
+                  onResizeStop={(e, direction, ref, delta, position) => {
+                    this.setState({
+                      width: ref.style.width,
+                      height: ref.style.height,
+                      ...position
+                    });
+                  }}
+                  enableResizing={{}}
+                >
+                  <Paper style={{ position: "relative" }}>
+                    <AppBar style={{ position: "relative", padding: 10 }}>Menu2</AppBar>
+                    <Paper>
+                      <List>
+                        <Button color="primary">ぼたん</Button>
+                      </List>
+                      <List>
+                        <Button color="secondary">ぼたん</Button>
+                      </List>
+                    </Paper>
+                  </Paper>
+                </Rnd>
+
               </div>
             )}
           </PixelStreamingContext.Consumer>
