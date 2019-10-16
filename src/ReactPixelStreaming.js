@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PixelWindow from "./PixelWindow";
 import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
+import { Rnd } from "react-rnd";
+import { Paper, Button, AppBar, List, Container } from "@material-ui/core";
 
 export default class ReactPixelStreaming extends Component {
   constructor(props) {
@@ -28,8 +30,14 @@ export default class ReactPixelStreaming extends Component {
       actions: {
         updateWebRTCStat: this.updateWebRTCStat,
         updateClientConfig: this.updateClientConfig,
-        updateSocket: this.updateSocket,
-      }
+        updateSocket: this.updateSocket
+      },
+      // for Rnd
+      // x/yを初期化しとかないとdragが計算できない
+      x: 30,
+      y: 30,
+      x2: 300,
+      y2: 300,
     };
   }
 
@@ -41,10 +49,9 @@ export default class ReactPixelStreaming extends Component {
 
   updateSocket = socket => {
     this.setState({
-      socket: socket,
+      socket: socket
     });
   };
-
 
   updateClientConfig = clientConfig => {
     console.log(clientConfig);
@@ -52,7 +59,6 @@ export default class ReactPixelStreaming extends Component {
       clientConfig: clientConfig
     });
   };
-
 
   componentDidMount() {
     //        this.state.addResponseEventListener("handle_responses", this.props.handler);
@@ -70,12 +76,59 @@ export default class ReactPixelStreaming extends Component {
         <div style={this.props.style}>
           <PixelStreamingContext.Consumer>
             {context => (
-              <PixelWindow
-                load={context.load}
-                actions={context.actions}
-                connect={context.connect}
-                host={this.props.webRtcHost}
-              />
+              <div>
+                <Rnd
+                  size={{ width: this.state.width, height: this.state.height }}
+                  position={{ x: this.state.x, y: this.state.y }}
+                  onDragStop={(e, d) => {
+                    this.setState({ x: d.x, y: d.y });
+                  }}
+                  onResizeStop={(e, direction, ref, delta, position) => {
+                    this.setState({
+                      width: ref.style.width,
+                      height: ref.style.height,
+                      ...position
+                    });
+                  }}
+                >
+                  <Paper>
+                    <AppBar style={{ padding: 10 }}>Streaming Window</AppBar>
+                    <PixelWindow
+                      load={context.load}
+                      actions={context.actions}
+                      connect={context.connect}
+                      host={this.props.webRtcHost}
+                    />
+                  </Paper>
+                </Rnd>
+                <Rnd
+                  size={{ width: "200", height: "300" }}
+                  position={{ x: this.state.x2, y: this.state.y2 }}
+                  onDragStop={(e, d) => {
+                    this.setState({ x2: d.x, y2: d.y });
+                  }}
+                  onResizeStop={(e, direction, ref, delta, position) => {
+                    this.setState({
+                      width: ref.style.width,
+                      height: ref.style.height,
+                      ...position
+                    });
+                  }}
+                  enableResizing={{}}
+                >
+                  <Paper style={{ position: "relative" }}>
+                    <AppBar style={{ position: "relative", padding: 10 }}>Menu</AppBar>
+                    <Paper>
+                      <List>
+                        <Button color="primary">ぼたん</Button>
+                      </List>
+                      <List>
+                        <Button color="secondary">ぼたん</Button>
+                      </List>
+                    </Paper>
+                  </Paper>
+                </Rnd>
+              </div>
             )}
           </PixelStreamingContext.Consumer>
           {this.props.children}
