@@ -4,6 +4,7 @@ import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import { Rnd } from "react-rnd";
 import { Paper, Button, AppBar, List } from "@material-ui/core";
+import QRCode from "qrcode.react"; 
 
 export default class ReactPixelStreaming extends Component {
   constructor(props) {
@@ -40,8 +41,49 @@ export default class ReactPixelStreaming extends Component {
       y2: 30,
       x3: 930,
       y3: 174,
+      x4: 930,
+      y4: 318,
       width: 900,
+      // TODO: maxSize/ratio
+      disableDragging: false,
+      enableResizing: {
+        bottom: true,
+        bottomLeft: true,
+        bottomRight: true,
+        left: true,
+        right: true,
+        top: true,
+        topLeft: true,
+        topRight: true,
+      }
     };
+  }
+
+  setDisableDragging = disable => {
+    this.setState({
+      disableDragging: disable
+    })
+  }
+
+  setEnableResizing = enable => {
+    if (enable) {
+      this.setState({
+        enableResizing: {
+          bottom: true,
+          bottomLeft: true,
+          bottomRight: true,
+          left: true,
+          right: true,
+          top: true,
+          topLeft: true,
+          topRight: true,
+        }
+      })
+      return;
+    }
+    this.setState({
+      enableResizing: {}
+    })
   }
 
   updateWebRTCStat = webrtcStat => {
@@ -93,6 +135,7 @@ export default class ReactPixelStreaming extends Component {
                       ...position
                     });
                   }}
+                  disableDragging={this.state.disableDragging}
                 >
                   <Paper>
                     {/* TODO: 最小化、最大化、オリジナルサイズボタンを追加 */}
@@ -102,6 +145,8 @@ export default class ReactPixelStreaming extends Component {
                       actions={context.actions}
                       connect={context.connect}
                       host={this.props.webRtcHost}
+                      setDisableDragging={this.setDisableDragging}
+                      setEnableResizing={this.setEnableResizing}
                     />
                   </Paper>
                 </Rnd>
@@ -156,6 +201,30 @@ export default class ReactPixelStreaming extends Component {
                       <List>
                         <Button color="secondary">ぼたん</Button>
                       </List>
+                    </Paper>
+                  </Paper>
+                </Rnd>
+
+                {/* TODO: URL wo state nisuru */}
+                <Rnd
+                  size={{ width: "200", height: "300" }}
+                  position={{ x: this.state.x4, y: this.state.y4 }}
+                  onDragStop={(e, d) => {
+                    this.setState({ x4: d.x, y4: d.y });
+                  }}
+                  onResizeStop={(e, direction, ref, delta, position) => {
+                    this.setState({
+                      width: ref.style.width,
+                      height: ref.style.height,
+                      ...position
+                    });
+                  }}
+                  enableResizing={{}}
+                >
+                  <Paper style={{ position: "relative" }}>
+                    <AppBar style={{ position: "relative", padding: 10 }}>QR Code</AppBar>
+                    <Paper>
+                      <QRCode value={window.location.href}/>
                     </Paper>
                   </Paper>
                 </Rnd>

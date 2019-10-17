@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import "./lib/videoHelper";
 
+// TODO: keyboard/mouse event
 class PixelVideo extends React.Component {
   constructor(props) {
     super(props);
@@ -23,9 +24,12 @@ class PixelVideo extends React.Component {
     // Elementを挿入
     this.refs.video.appendChild(webRtcPlayerObj.video);
 
+
+
         // videoのサイズ設定
     webRtcPlayerObj.video.style.setProperty("width","100%");
     webRtcPlayerObj.video.style.setProperty("padding","10px");
+
 
     // webRtcPlayerにeventとか設定
     videoHelper(

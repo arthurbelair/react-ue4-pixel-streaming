@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.5.1",
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^9.0.0",
+    "qrcode.react": "^0.9.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-rnd": "^10.1.1",
@@ -22,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "transpile": "babel src -d dist --copy-files",
-    "demoStart": "webpack-dev-server --mode development --hot --inline --content-base ./"
+    "demoStart": "webpack-dev-server --host 0.0.0.0 --mode development --hot --inline --content-base ./"
   },
   "eslintConfig": {
     "extends": "react-app"

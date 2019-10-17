@@ -26,16 +26,24 @@ class PixelWindow extends React.Component {
     return (
       // TODO: video上でのdrag and dropとhoverを無効化できるようにする
       <div style={style}
-           onMouseEnter={e=>{
-            e.persist(); 
-            e.nativeEvent.stopImmediatePropagation();
-            e.stopPropagation(); 
-           }}
-           onClick={e=>{
-            e.persist(); 
-            e.nativeEvent.stopImmediatePropagation();
-            e.stopPropagation(); 
-           }}
+          onMouseEnter={e=>{
+            console.log("enter");
+            this.props.setDisableDragging(true);
+          }}
+
+          onMouseLeave={e=>{
+            console.log("leave");
+            this.props.setDisableDragging(false);
+          }}
+          //   e.persist(); 
+          //   e.nativeEvent.stopImmediatePropagation();
+          //   e.stopPropagation(); 
+          //  }}
+          //  onClick={e=>{
+          //   e.persist(); 
+          //   e.nativeEvent.stopImmediatePropagation();
+          //   e.stopPropagation(); 
+          //  }}
       >
         <div id="player" className="fixed-size">
           <div id="videoPlayOverlay">
