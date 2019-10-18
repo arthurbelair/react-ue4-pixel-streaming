@@ -55,6 +55,8 @@ class PixelWindow extends React.Component {
                         webRtcPlayer={context.webRtcPlayer}
                         responseEventListeners={context.responseEventListeners}
                         socket={context.socket}
+                        setVideoAspectRatio={context.setVideoAspectRatio}
+                        setPlayerAspectRatio={context.setPlayerAspectRatio}
                       /> : PlayerComponent(context)
                 }
                 {/* {context =>

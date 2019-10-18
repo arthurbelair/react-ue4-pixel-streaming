@@ -1,3 +1,6 @@
+import inputHelper from "./inputHelper";
+import { ControlSchemeType } from "./types";
+
 export default function(webRtcPlayerObj, socket, responseEventListeners) {
   // webrtc-offerで疎通開始
   webRtcPlayerObj.onWebRtcOffer = function(offer) {
@@ -15,17 +18,14 @@ export default function(webRtcPlayerObj, socket, responseEventListeners) {
     // videoplayが必要
     console.log("Player Initializeds");
 
-
     // TODO: videoWidthとvideoHeightを取る
-    function play(){
-        setTimeout(()=>{
-        webRtcPlayerObj.video.play().catch(
-            e => {
-                console.log("retry");
-                play();
-            }
-        );    
-        },500)
+    function play() {
+      setTimeout(() => {
+        webRtcPlayerObj.video.play().catch(e => {
+          console.log("retry");
+          play();
+        });
+      }, 500);
     }
     play();
   };
@@ -69,6 +69,16 @@ export default function(webRtcPlayerObj, socket, responseEventListeners) {
     webRtcPlayerObj.receiveAnswer(webRTCData);
   });
 
+  // TODO: settingsはpropsで受け取るようにする
+  const settings = {
+    print_inputs: true,
+    inputOptions: {
+      controlScheme:ControlSchemeType.HoveringMouse
+    },
+  };
+
+  const { registerInputs } = inputHelper(webRtcPlayerObj, settings);
+  registerInputs(webRtcPlayerObj.video, settings);
 }
 
 // TODO: なんとかする

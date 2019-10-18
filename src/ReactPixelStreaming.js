@@ -4,8 +4,9 @@ import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import { Rnd } from "react-rnd";
 import { Paper, Button, AppBar, List } from "@material-ui/core";
-import QRCode from "qrcode.react"; 
+import QRCode from "qrcode.react";
 
+// FPS toka no Statics Chart wo tuika
 export default class ReactPixelStreaming extends Component {
   constructor(props) {
     super(props);
@@ -54,16 +55,36 @@ export default class ReactPixelStreaming extends Component {
         right: true,
         top: true,
         topLeft: true,
-        topRight: true,
-      }
+        topRight: true
+      },
+      // TODO: video/playerAspect
+      //  var playerAspectRatio = playerElement.clientHeight / playerElement.clientWidth; // We want to keep the video ratio correct for the video stream
+      //  var videoAspectRatio = videoElement.videoHeight / videoElement.videoWidth;
+      playerAspectRatio: 1,
+      videoAspectRatio: 1,
     };
   }
+  
+  setPlayerAspectRatio(playerElement){
+    console.log(playerElement);
+    this.setState({
+      playerAspectRatio: playerElement.clientHeight / playerElement.clientWidth,
+    });
+  }
+
+  setVideoAspectRatio(videoElement){
+    console.log(videoElement);
+    this.setState({
+      videoAspectRatio: videoElement.videoHeight / videoElement.videoWidth,
+    });
+  }
+
 
   setDisableDragging = disable => {
     this.setState({
       disableDragging: disable
-    })
-  }
+    });
+  };
 
   setEnableResizing = enable => {
     if (enable) {
@@ -76,15 +97,15 @@ export default class ReactPixelStreaming extends Component {
           right: true,
           top: true,
           topLeft: true,
-          topRight: true,
+          topRight: true
         }
-      })
+      });
       return;
     }
     this.setState({
       enableResizing: {}
-    })
-  }
+    });
+  };
 
   updateWebRTCStat = webrtcStat => {
     this.setState({
@@ -139,7 +160,9 @@ export default class ReactPixelStreaming extends Component {
                 >
                   <Paper>
                     {/* TODO: 最小化、最大化、オリジナルサイズボタンを追加 */}
-                    <AppBar style={{ position:"relative", padding: 10 }}>Streaming Window</AppBar>
+                    <AppBar style={{ position: "relative", padding: 10 }}>
+                      Streaming Window
+                    </AppBar>
                     <PixelWindow
                       load={context.load}
                       actions={context.actions}
@@ -147,6 +170,8 @@ export default class ReactPixelStreaming extends Component {
                       host={this.props.webRtcHost}
                       setDisableDragging={this.setDisableDragging}
                       setEnableResizing={this.setEnableResizing}
+                      setVideoAspectRatio={this.setVideoAspectRatio}
+                      setPlayerAspectRatio={this.setPlayerAspectRatio}
                     />
                   </Paper>
                 </Rnd>
@@ -166,7 +191,9 @@ export default class ReactPixelStreaming extends Component {
                   enableResizing={{}}
                 >
                   <Paper style={{ position: "relative" }}>
-                    <AppBar style={{ position: "relative", padding: 10 }}>Menu</AppBar>
+                    <AppBar style={{ position: "relative", padding: 10 }}>
+                      Menu
+                    </AppBar>
                     <Paper>
                       <List>
                         <Button color="primary">ぼたん</Button>
@@ -193,7 +220,9 @@ export default class ReactPixelStreaming extends Component {
                   enableResizing={{}}
                 >
                   <Paper style={{ position: "relative" }}>
-                    <AppBar style={{ position: "relative", padding: 10 }}>Menu2</AppBar>
+                    <AppBar style={{ position: "relative", padding: 10 }}>
+                      Menu2
+                    </AppBar>
                     <Paper>
                       <List>
                         <Button color="primary">ぼたん</Button>
@@ -222,13 +251,17 @@ export default class ReactPixelStreaming extends Component {
                   enableResizing={{}}
                 >
                   <Paper style={{ position: "relative" }}>
-                    <AppBar style={{ position: "relative", padding: 10 }}>QR Code</AppBar>
+                    <AppBar style={{ position: "relative", padding: 10 }}>
+                      QR Code
+                    </AppBar>
                     <Paper>
-                      <QRCode value={window.location.href}/>
+                      <QRCode
+                        style={{ padding: "20px" }}
+                        value={window.location.href}
+                      />
                     </Paper>
                   </Paper>
                 </Rnd>
-
               </div>
             )}
           </PixelStreamingContext.Consumer>

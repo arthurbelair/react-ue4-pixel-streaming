@@ -29,6 +29,11 @@ class PixelVideo extends React.Component {
         // videoのサイズ設定
     webRtcPlayerObj.video.style.setProperty("width","100%");
     webRtcPlayerObj.video.style.setProperty("padding","10px");
+    
+    // videoのsizeをモニター
+    // TODO: うごいてない
+    webRtcPlayerObj.video.addEventListener("resize", this.setVideoAspectRatio);
+    webRtcPlayerObj.video.addEventListener("resize", this.setPlayerAspectRatio);
 
 
     // webRtcPlayerにeventとか設定
@@ -59,18 +64,6 @@ const style = {};
 
 export default PixelVideo;
 
-/**
- * Config data received from WebRTC sender via the Cirrus web server
- */
-// TODO: clientConfigをstateに突っ込む
-// function onClientConfig(clientConfig) {
-// 	log(`clientConfig = ${JSON.stringify(clientConfig)}`);
-
-// 	// let playerDiv = document.getElementById('player');
-
-// 	// TODO: jsxに移植
-// 	let playerElement = setupWebRtcPlayer(playerDiv, clientConfig)
-// 	// resizePlayerStyle();
 
 // 	// TODO: マウス設定
 // 	switch (inputOptions.controlScheme) {
