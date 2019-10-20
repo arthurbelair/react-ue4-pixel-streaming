@@ -27,12 +27,12 @@ class PixelWindow extends React.Component {
       // TODO: video上でのdrag and dropとhoverを無効化できるようにする
       <div style={style}
           onMouseEnter={e=>{
-            console.log("enter");
+            // console.log("enter");
             this.props.setDisableDragging(true);
           }}
 
           onMouseLeave={e=>{
-            console.log("leave");
+            // console.log("leave");
             this.props.setDisableDragging(false);
           }}
           //   e.persist(); 
@@ -55,8 +55,9 @@ class PixelWindow extends React.Component {
                         webRtcPlayer={context.webRtcPlayer}
                         responseEventListeners={context.responseEventListeners}
                         socket={context.socket}
-                        setVideoAspectRatio={context.setVideoAspectRatio}
-                        setPlayerAspectRatio={context.setPlayerAspectRatio}
+                        setVideoAspectRatio={context.actions.setVideoAspectRatio}
+                        setPlayerAspectRatio={context.actions.setPlayerAspectRatio}
+                        addLatestStats={context.actions.addLatestStats}
                       /> : PlayerComponent(context)
                 }
                 {/* {context =>

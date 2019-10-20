@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Slider, Typography } from "react";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import "./lib/videoHelper";
 
@@ -17,6 +17,8 @@ class PixelVideo extends React.Component {
       peerConnectionOptions: this.props.clientConfig.peerConnectionOptions
     });
 
+    console.log(webRtcPlayerObj);
+
     this.setState({
       webRtcPlayerObj: webRtcPlayerObj
     });
@@ -24,38 +26,55 @@ class PixelVideo extends React.Component {
     // Elementを挿入
     this.refs.video.appendChild(webRtcPlayerObj.video);
 
+    // videoのサイズ設定
+    webRtcPlayerObj.video.style.setProperty("width", "100%");
+    webRtcPlayerObj.video.style.setProperty("padding", "10px");
 
-
-        // videoのサイズ設定
-    webRtcPlayerObj.video.style.setProperty("width","100%");
-    webRtcPlayerObj.video.style.setProperty("padding","10px");
-    
     // videoのsizeをモニター
-    // TODO: うごいてない
-    webRtcPlayerObj.video.addEventListener("resize", this.setVideoAspectRatio);
-    webRtcPlayerObj.video.addEventListener("resize", this.setPlayerAspectRatio);
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const rect = entry.contentRect;
+        // console.log(rect.top, rect.left);
+        // console.log(rect.width, rect.height);
 
+        this.props.setVideoAspectRatio(webRtcPlayerObj.video);
+        this.props.setPlayerAspectRatio(webRtcPlayerObj.video);
+        // TODO: video解像度とプレイヤーサイズ仕込む
+      }
+    });
+
+    resizeObserver.observe(webRtcPlayerObj.video);
+
+    // video上での右クリメニュー殺しとく
+    webRtcPlayerObj.video.addEventListener(
+      "contextmenu",
+      function(e) {
+        e.preventDefault();
+      },
+      false
+    );
 
     // webRtcPlayerにeventとか設定
     videoHelper(
       webRtcPlayerObj,
       this.props.socket,
-      this.props.responseEventListeners
+      this.props.responseEventListeners,
+      this.props.addLatestStats
     );
 
-      // createOffer
-      webRtcPlayerObj.createOffer();
-
+    // createOffer
+    webRtcPlayerObj.createOffer();
 
     // マウスとかの設定
     // registerInputs(webRtcPlayerObj.video);
-
   }
 
   componentWillUnmount() {}
 
   render() {
-    return <div ref="video" style={{width: "100%"}}></div>;
+    return (
+        <div ref="video" style={{ width: "100%" }}></div>
+    );
   }
 }
 import videoHelper from "./lib/videoHelper";
@@ -63,7 +82,6 @@ import videoHelper from "./lib/videoHelper";
 const style = {};
 
 export default PixelVideo;
-
 
 // 	// TODO: マウス設定
 // 	switch (inputOptions.controlScheme) {
@@ -79,3 +97,26 @@ export default PixelVideo;
 // 			break;
 // 	}
 // }
+
+const marks = [
+  {
+    value: 0,
+    label: "0°C"
+  },
+  {
+    value: 20,
+    label: "20°C"
+  },
+  {
+    value: 37,
+    label: "37°C"
+  },
+  {
+    value: 100,
+    label: "100°C"
+  }
+];
+
+function valuetext(value) {
+  return `${value}°C`;
+}

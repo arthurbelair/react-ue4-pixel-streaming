@@ -14,38 +14,8 @@ export default function inputHelper(webRtcPlayerObj, settings) {
     sendInputData
   } = emitter(webRtcPlayerObj, settings);
 
-	// playerAspectはDOMでvideoはソース解像度
-	// Stateに移植する
-	// let ratio = playerAspectRatio / videoAspectRatio;
-	// // Unsigned.
-	// const normalizeAndQuantizeUnsigned = (x, y) => {
-	// 	let normalizedX = x / playerElement.clientWidth;
-	// 	let normalizedY = ratio * (y / playerElement.clientHeight - 0.5) + 0.5;
-	// 	if (normalizedX < 0.0 || normalizedX > 1.0 || normalizedY < 0.0 || normalizedY > 1.0) {
-	// 		return {
-	// 			inRange: false,
-	// 			x: 65535,
-	// 			y: 65535
-	// 		};
-	// 	} else {
-	// 		return {
-	// 			inRange: true,
-	// 			x: normalizedX * 65536,
-	// 			y: normalizedY * 65536
-	// 		};
-	// 	}
-	// }
-	// // Signed.
-	// const normalizeAndQuantizeSigned = (x, y) => {
-	// 	let normalizedX = x / (0.5 * playerElement.clientWidth);
-	// 	let normalizedY = (ratio * y) / (0.5 * playerElement.clientHeight);
-	// 	return {
-	// 		x: normalizedX * 32767,
-	// 		y: normalizedY * 32767
-	// 	};
-	// }
 
-
+  
   // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
   const MouseButton = {
     MainButton: 0, // Left button.
@@ -244,8 +214,8 @@ export default function inputHelper(webRtcPlayerObj, settings) {
         if (settings.print_inputs) {
           console.log(`F${fingerIds[touch.identifier]}=(${x}, ${y})`);
         }
-//        let coord = normalizeAndQuantizeUnsigned(x, y);
-        let coord = {x, y};
+        //        let coord = normalizeAndQuantizeUnsigned(x, y);
+        let coord = { x, y };
 
         data.setUint16(byte, coord.x, true);
         byte += 2;
@@ -349,7 +319,7 @@ export default function inputHelper(webRtcPlayerObj, settings) {
   function registerMouseEnterAndLeaveEvents(playerElement, settings) {
     playerElement.onmouseenter = function(e) {
       if (settings.print_inputs) {
-        console.log("mouse enter");
+        // console.log("mouse enter");
       }
       var Data = new DataView(new ArrayBuffer(1));
       Data.setUint8(0, MessageType.MouseEnter);
@@ -359,7 +329,7 @@ export default function inputHelper(webRtcPlayerObj, settings) {
 
     playerElement.onmouseleave = function(e) {
       if (settings.print_inputs) {
-        console.log("mouse leave");
+        // console.log("mouse leave");
       }
       var Data = new DataView(new ArrayBuffer(1));
       Data.setUint8(0, MessageType.MouseLeave);
@@ -409,8 +379,8 @@ export default function inputHelper(webRtcPlayerObj, settings) {
         new Uint8Array([MessageType.KeyDown, e.keyCode, e.repeat]).buffer
       );
       if (
-        settings.inputOptions.suppressBrowserKeys &&
-        isKeyCodeBrowserKey(e.keyCode)
+        settings.inputOptions.suppressBrowserKeys // &&
+//        isKeyCodeBrowserKey(e.keyCode)
       ) {
         e.preventDefault();
       }
@@ -442,7 +412,6 @@ export default function inputHelper(webRtcPlayerObj, settings) {
 
   return { registerInputs };
 }
-
 
 //TODO: Quantizeの調査
 // if (playerAspectRatio > videoAspectRatio) {

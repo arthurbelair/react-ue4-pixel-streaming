@@ -1,7 +1,7 @@
 import inputHelper from "./inputHelper";
 import { ControlSchemeType } from "./types";
 
-export default function(webRtcPlayerObj, socket, responseEventListeners) {
+export default function(webRtcPlayerObj, socket, responseEventListeners, addLatestStats) {
   // webrtc-offerで疎通開始
   webRtcPlayerObj.onWebRtcOffer = function(offer) {
     console.log("offer");
@@ -67,14 +67,52 @@ export default function(webRtcPlayerObj, socket, responseEventListeners) {
   socket.on("webrtc-answer", function(webRTCData) {
     console.log("on webrtc-answer");
     webRtcPlayerObj.receiveAnswer(webRTCData);
+
+    // TODO: statsの更新仕込む
+    webRtcPlayerObj.onAggregatedStats = aggregatedStats => {
+      // TODO: これはArrayに入れてchartで表示する
+      // console.log(aggregatedStats);
+      addLatestStats(aggregatedStats);
+
+      /*
+      avgBitrate: 3710
+avgframerate: 58
+bitrate: 3716
+bytesReceived: 26270465
+bytesReceivedStart: 295346
+currentRoundTripTime: 0
+framerate: 60
+framesDecoded: 3346
+framesDecodedStart: 58
+highBitrate: 3747
+highFramerate: 61
+lowBitrate: 3623
+lowFramerate: 57
+packetsLost: 0
+timestamp: 1571536257934        // 現在のタイムスタンプ
+timestampStart: 1571536201934   // 収集開始のタイムスタンプ
+*/
+    };
+    webRtcPlayerObj.aggregateStats(1 * 1000 /*Check every 1 second*/);
+
+    function print() {
+      webRtcPlayerObj.getStats(s => {
+        s.forEach(stat => {
+          console.log(JSON.stringify(stat));
+        });
+      });
+    }
+    // setInterval(print, 5000);
   });
 
   // TODO: settingsはpropsで受け取るようにする
   const settings = {
     print_inputs: true,
     inputOptions: {
-      controlScheme:ControlSchemeType.HoveringMouse
-    },
+      //      controlScheme:ControlSchemeType.LockedMouse
+      controlScheme: ControlSchemeType.HoveringMouse,
+      suppressBrowserKeys: true, // keyboardイベントのpreventDefalutを有効化
+    }
   };
 
   const { registerInputs } = inputHelper(webRtcPlayerObj, settings);
