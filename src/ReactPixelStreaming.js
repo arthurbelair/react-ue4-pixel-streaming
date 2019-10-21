@@ -4,6 +4,7 @@ import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import { Rnd } from "react-rnd";
 import {
+  Link,
   Paper,
   Button,
   AppBar,
@@ -59,6 +60,8 @@ export default class ReactPixelStreaming extends Component {
       y3: 600,
       x4: 650,
       y4: 645,
+      x5: 400,
+      y5: 400,
       width: 900,
       // TODO: maxSize/ratio
       disableDragging: false,
@@ -78,9 +81,17 @@ export default class ReactPixelStreaming extends Component {
       playerAspectRatio: 1,
       videoAspectRatio: 1,
       playerRes: {},
-      videoRes: {}
+      videoRes: {},
+      infomation: ""
     };
+
+    // 雑にresponse受け取る
+    PixelStreamingClient.addResponseEventListener("handle", this.setInfomation);
   }
+
+  setInfomation = info => {
+    this.setState({ infomation: info });
+  };
 
   addLatestStats = stats => {
     this.setState({
@@ -333,7 +344,11 @@ export default class ReactPixelStreaming extends Component {
                         <FormControlLabel
                           value="1920"
                           control={
-                            <Radio color="primary" onChange={console.log} checked={false}/>
+                            <Radio
+                              color="primary"
+                              onChange={console.log}
+                              checked={false}
+                            />
                           }
                           label="1920"
                           labelPlacement="top"
@@ -342,7 +357,11 @@ export default class ReactPixelStreaming extends Component {
                         <FormControlLabel
                           value="2048"
                           control={
-                            <Radio color="primary" onChange={console.log} checked={false}/>
+                            <Radio
+                              color="primary"
+                              onChange={console.log}
+                              checked={false}
+                            />
                           }
                           label="2048"
                           labelPlacement="top"
@@ -351,7 +370,11 @@ export default class ReactPixelStreaming extends Component {
                         <FormControlLabel
                           value="3840"
                           control={
-                            <Radio color="primary" onChange={console.log} checked={false}/>
+                            <Radio
+                              color="primary"
+                              onChange={console.log}
+                              checked={false}
+                            />
                           }
                           label="3840"
                           labelPlacement="top"
@@ -370,6 +393,50 @@ export default class ReactPixelStreaming extends Component {
             )}
           </PixelStreamingContext.Consumer>
           {this.props.children}
+          {this.state.infomation ? (
+            <Rnd
+              size={{ width: "600", height: "900" }}
+              position={{ x: this.state.x5, y: this.state.y5 }}
+              onDragStop={(e, d) => {
+                this.setState({ x5: d.x, y5: d.y });
+              }}
+              onResizeStop={(e, direction, ref, delta, position) => {
+                this.setState({
+                  width: ref.style.width,
+                  height: ref.style.height,
+                  ...position
+                });
+              }}
+              enableResizing={{}}
+            >
+              <Paper style={{ position: "relative" }}>
+                <AppBar style={{ position: "relative"}}>
+                  適当な商品情報
+                </AppBar>
+                <Paper style={{padding: 30 }}>
+                  <List>商品名: {JSON.parse(this.state.infomation).name}</List>
+                  <List>{JSON.parse(this.state.infomation).colors}</List>
+                  <List>{JSON.parse(this.state.infomation).price}</List>
+                  <Button
+                    variant="contained"
+                    href="{JSON.parse(this.state.infomation).name}"
+                  >
+                    商品ページ
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      this.setInfomation("");
+                    }}
+                  >
+                    Close
+                  </Button>
+                </Paper>
+              </Paper>
+            </Rnd>
+          ) : null}
         </div>
       </PixelStreamingContext.Provider>
     );
