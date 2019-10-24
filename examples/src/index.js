@@ -13,7 +13,8 @@ function App() {
    return (
      <React.Fragment>
        <CssBaseline />
-       <ReactPixelStreaming webRtcHost="localhost"/>
+       <ReactPixelStreaming webRtcHost="60.150.232.170"/>
+       {/* <ReactPixelStreaming webRtcHost="localhost"/> */}
      </React.Fragment>
    );
  }

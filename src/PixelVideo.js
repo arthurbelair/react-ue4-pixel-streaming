@@ -1,6 +1,7 @@
 import React, { Component, Slider, Typography } from "react";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import "./lib/videoHelper";
+import ResizeObserver from '@juggle/resize-observer';
 
 // TODO: keyboard/mouse event
 class PixelVideo extends React.Component {
@@ -22,6 +23,8 @@ class PixelVideo extends React.Component {
     this.setState({
       webRtcPlayerObj: webRtcPlayerObj
     });
+
+    this.props.setWebRTCPlayerObj(webRtcPlayerObj);
 
     // Elementを挿入
     this.refs.video.appendChild(webRtcPlayerObj.video);

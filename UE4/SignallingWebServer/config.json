@@ -5,5 +5,7 @@
 	"UseAuthentication": false,
 	"LogToFile": true,
 	"HomepageFile": "player.htm",
-	"AdditionalRoutes": {}
+	"AdditionalRoutes": {},
+	"publicIp": "60.150.232.170",
+	"peerConnectionOptions": "{ \"iceServers\": [{\"urls\": [\"stun:60.150.232.170:19302\",\"turn:60.150.232.170:19303\"], \"username\": \"PixelStreamingUser\", \"credential\": \"Another TURN in the road\"}] }"
 }

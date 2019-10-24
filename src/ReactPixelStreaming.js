@@ -3,6 +3,7 @@ import PixelWindow from "./PixelWindow";
 import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
 import { Rnd } from "react-rnd";
+import "./lib/emitter";
 import {
   Link,
   Paper,
@@ -11,12 +12,20 @@ import {
   List,
   Radio,
   Container,
-  FormControlLabel
+  FormControlLabel,
+  Slider,
+  Typography,
+  Fab,
+  Toolbar,
+  IconButton,
 } from "@material-ui/core";
+
+import { Fullscreen, FullscreenExit } from "@material-ui/icons";
+
 import QRCode from "qrcode.react";
 import { Line } from "react-chartjs-2";
 
-import Slider from "@material-ui/core/Slider";
+import emitter from "./lib/emitter";
 
 // FPS toka no Statics Chart wo tuika
 export default class ReactPixelStreaming extends Component {
@@ -28,15 +37,16 @@ export default class ReactPixelStreaming extends Component {
       addResponseEventListener: PixelStreamingClient.addResponseEventListener,
       removeResponseEventListener:
         PixelStreamingClient.removeResponseEventListener,
-      emitCommand: PixelStreamingClient.emitCommand,
-      emitDescriptor: PixelStreamingClient.emitDescriptor,
-      emitUIInteraction: PixelStreamingClient.emitUIInteraction,
+      emitter: emitter,
+      // emitCommand: PixelStreamingClient.emitCommand,
+      // emitDescriptor: PixelStreamingClient.emitDescriptor,
+      // emitUIInteraction: PixelStreamingClient.emitUIInteraction,
       controlScheme: PixelStreamingClient.controlScheme,
       suppressBrowserKeys: PixelStreamingClient.suppressBrowserKeys,
       fakeMouseWithTouches: PixelStreamingClient.fakeMouseWithTouches,
       webrtcState: "",
       // webRtcPlayerObjをstate化
-      webRtcPlayerObj: PixelStreamingClient.webRtcPlayerObj,
+      webRtcPlayerObj: {}, //PixelStreamingClient.webRtcPlayerObj,
       webRtcPlayer: PixelStreamingClient.webRtcPlayer,
       connect: PixelStreamingClient.connect,
       clientConfig: "",
@@ -48,7 +58,8 @@ export default class ReactPixelStreaming extends Component {
         updateSocket: this.updateSocket,
         setPlayerAspectRatio: this.setPlayerAspectRatio,
         setVideoAspectRatio: this.setVideoAspectRatio,
-        addLatestStats: this.addLatestStats
+        addLatestStats: this.addLatestStats,
+        setWebRTCPlayerObj: this.setWebRTCPlayerObj
       },
       // for Rnd
       // x/yを初期化しとかないとdragが計算できない
@@ -89,13 +100,24 @@ export default class ReactPixelStreaming extends Component {
     PixelStreamingClient.addResponseEventListener("handle", this.setInfomation);
   }
 
+  setWebRTCPlayerObj = player => {
+    this.setState({
+      webRtcPlayerObj: player
+    });
+  };
+
   setInfomation = info => {
     this.setState({ infomation: info });
   };
 
-  addLatestStats = stats => {
+  addLatestStats = (stats, videoElement) => {
     this.setState({
-      aggregatedStats: [...this.state.aggregatedStats, stats]
+      aggregatedStats: [...this.state.aggregatedStats, stats],
+      videoAspectRatio: videoElement.videoHeight / videoElement.videoWidth,
+      videoRes: {
+        width: videoElement.videoWidth,
+        height: videoElement.videoHeight
+      }
     });
   };
 
@@ -201,7 +223,17 @@ export default class ReactPixelStreaming extends Component {
                   <Paper>
                     {/* TODO: 最小化、最大化、オリジナルサイズボタンを追加 */}
                     <AppBar style={{ position: "relative", padding: 10 }}>
-                      Streaming Window
+                      <Toolbar>
+                        <Typography style={{"flexGrow": 1}}>
+                        Streaming Window
+                        </Typography>
+                        <IconButton color="inherit" onClick={()=>{this.setState({width: "100vw"})}}>
+                          <Fullscreen />
+                        </IconButton>
+                        <IconButton color="inherit" onClick={()=>{this.setState({width: "900"})}}>
+                          <FullscreenExit />
+                        </IconButton>
+                      </Toolbar>
                     </AppBar>
                     <PixelWindow
                       load={context.load}
@@ -333,8 +365,14 @@ export default class ReactPixelStreaming extends Component {
                           control={
                             <Radio
                               color="primary"
-                              onChange={console.log}
-                              checked={true}
+                              onChange={() => {
+                                emitter(
+                                  context.webRtcPlayerObj
+                                ).emitUIInteraction({
+                                  ConsoleCommand: "r.SetRes 1280x720"
+                                });
+                              }}
+                              checked={context.videoRes.width === 1280}
                             />
                           }
                           label="1280"
@@ -346,8 +384,14 @@ export default class ReactPixelStreaming extends Component {
                           control={
                             <Radio
                               color="primary"
-                              onChange={console.log}
-                              checked={false}
+                              onChange={() => {
+                                emitter(
+                                  context.webRtcPlayerObj
+                                ).emitUIInteraction({
+                                  ConsoleCommand: "r.SetRes 1920x1080"
+                                });
+                              }}
+                              checked={context.videoRes.width === 1920}
                             />
                           }
                           label="1920"
@@ -355,15 +399,21 @@ export default class ReactPixelStreaming extends Component {
                         />
 
                         <FormControlLabel
-                          value="2048"
+                          value="2560"
                           control={
                             <Radio
                               color="primary"
-                              onChange={console.log}
-                              checked={false}
+                              onChange={() => {
+                                emitter(
+                                  context.webRtcPlayerObj
+                                ).emitUIInteraction({
+                                  ConsoleCommand: "r.SetRes 2560x1440"
+                                });
+                              }}
+                              checked={context.videoRes.width === 2560}
                             />
                           }
-                          label="2048"
+                          label="2560"
                           labelPlacement="top"
                         />
 
@@ -372,12 +422,40 @@ export default class ReactPixelStreaming extends Component {
                           control={
                             <Radio
                               color="primary"
-                              onChange={console.log}
-                              checked={false}
+                              onChange={() => {
+                                emitter(
+                                  context.webRtcPlayerObj
+                                ).emitUIInteraction({
+                                  ConsoleCommand: "r.SetRes 3840x2160"
+                                });
+                              }}
+                              checked={context.videoRes.width === 3840}
                             />
                           }
                           label="3840"
                           labelPlacement="top"
+                        />
+                      </Container>
+                      <Container>
+                        <Typography id="discrete-slider-custom" gutterBottom>
+                          FPS制限
+                        </Typography>
+                        <Slider
+                          style={{ width: "200" }}
+                          defaultValue={60}
+                          getAriaValueText={valuetext}
+                          aria-labelledby="discrete-slider-custom"
+                          step={15}
+                          valueLabelDisplay="auto"
+                          marks={marks}
+                          min={30}
+                          max={180}
+                          onChangeCommitted={(e, val) => {
+                            console.log(val);
+                            emitter(context.webRtcPlayerObj).emitUIInteraction({
+                              ConsoleCommand: `t.maxFPS ${val}`
+                            });
+                          }}
                         />
                       </Container>
                       <Container>
@@ -410,10 +488,8 @@ export default class ReactPixelStreaming extends Component {
               enableResizing={{}}
             >
               <Paper style={{ position: "relative" }}>
-                <AppBar style={{ position: "relative"}}>
-                  適当な商品情報
-                </AppBar>
-                <Paper style={{padding: 30 }}>
+                <AppBar style={{ position: "relative" }}>適当な商品情報</AppBar>
+                <Paper style={{ padding: 30 }}>
                   <List>商品名: {JSON.parse(this.state.infomation).name}</List>
                   <List>{JSON.parse(this.state.infomation).colors}</List>
                   <List>{JSON.parse(this.state.infomation).price}</List>
@@ -484,4 +560,31 @@ function genData(arry) {
     ]
   };
   return data;
+}
+
+const marks = [
+  {
+    value: 30,
+    label: "30"
+  },
+  {
+    value: 60,
+    label: "60"
+  },
+  {
+    value: 90,
+    label: "90"
+  },
+  {
+    value: 120,
+    label: "120"
+  },
+  {
+    value: 150,
+    label: "150"
+  }
+];
+
+function valuetext(value) {
+  return `Limit: ${value}fps`;
 }

@@ -72,7 +72,7 @@ export default function(webRtcPlayerObj, socket, responseEventListeners, addLate
     webRtcPlayerObj.onAggregatedStats = aggregatedStats => {
       // TODO: これはArrayに入れてchartで表示する
       // console.log(aggregatedStats);
-      addLatestStats(aggregatedStats);
+      addLatestStats(aggregatedStats, webRtcPlayerObj.video);
 
       /*
       avgBitrate: 3710
@@ -110,6 +110,7 @@ timestampStart: 1571536201934   // 収集開始のタイムスタンプ
     print_inputs: true,
     inputOptions: {
       //      controlScheme:ControlSchemeType.LockedMouse
+      fakeMouseWithTouches: true,
       controlScheme: ControlSchemeType.HoveringMouse,
       suppressBrowserKeys: true, // keyboardイベントのpreventDefalutを有効化
     }
