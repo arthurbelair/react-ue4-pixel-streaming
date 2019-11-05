@@ -1,7 +1,5 @@
 # 1. React プロジェクト作成しとく
 
-ex)
-
 ```bash
 create-react-app your_react_project
 ```
