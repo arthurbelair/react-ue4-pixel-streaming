@@ -2,13 +2,13 @@
 
 ex)
 
-```
+```bash
 create-react-app your_react_project
 ```
 
 # 2. package.json に追加
 
-```
+```bash
 cd your_react_project
 npm install shogo-hab/react-ue4-pixel-streaming --save
 ```
@@ -16,38 +16,44 @@ npm install shogo-hab/react-ue4-pixel-streaming --save
 # 3. Example
 
 ```jsx App.js
-import React from 'react';
-import ReactPixelStreaming, {PixelStreamingContext} from 'pixel-streaming-component';
+import React from "react";
+import ReactPixelStreaming, {
+  PixelStreamingContext
+} from "pixel-streaming-component";
 
 function App() {
   return (
-    <ReactPixelStreaming>
-        {/*
-          * ReactPixelStreamingで子孫ComponentとContextを共有する
-          */}
-        <YourComponent />
+    <ReactPixelStreaming
+      webRtcHost="localhost"
+      pixelStreamingResponseEvents={[]}
+    >
+      <PixelStreamingContext.Consumer>
+        {context => (
+          <div>
+            <PixelWindow
+              load={context.load}
+              actions={context.actions}
+              connect={context.connect}
+              host={context.webRtcHost}
+              setVideoAspectRatio={context.actions.setVideoAspectRatio}
+              setPlayerAspectRatio={context.actions.setPlayerAspectRatio}
+            />
+            <YourComponent context={context} />
+          </div>
+        )}
+      </PixelStreamingContext.Consumer>
     </ReactPixelStreaming>
   );
 }
 
-const YourComponent = () => (
-        {/*
-          * 子孫からPixelStreamingやWebRTC Playerへアクセスする場合はConsumerでWrapする
-          */}
-
-  <PixelStreamingContext.Consumer>
-    {(state) => (
-        <SomeComponent onClick={(e)=>{state.emitCommand(e)}}></SomeComponent>
-    )}
-    </PixelStreamingContext.Consumer>
-  );
+const YourComponent = context => <div>My Component</div>;
 
 export default App;
 ```
 
 # for Component Develop
 
-```
+```bash
 npm install
 npm run demoStart
 ```
@@ -65,7 +71,7 @@ npm run demoStart
 
 `ReactPixelStreaming`コンポーネントは以下の Attribute を受け取ります。
 
-```
+```jsx
 <ReactPixelStreaming
   webRtcHost="${HOST}:${PORT}"
   pixelStreamingResponseEvents={[]}
@@ -75,7 +81,7 @@ npm run demoStart
 - webRtcHost<Strings>: WebRTC のバックエンドを渡します。
 - pixelStreamingResponseEvents<Array>: UE4 で responsePixelStreaming が発行された時の処理を渡します。
 
-```
+```jsx
  [{name: "handler", handler: function(response){
    // some action
  } ]
@@ -85,9 +91,9 @@ npm run demoStart
 
 `PixelWindow`コンポーネントは context を介して以下の値を渡す必要があります。
 
-```
-<PixelStreamingContext.Consumer>{
-  context=>{
+```jsx
+<PixelStreamingContext.Consumer>
+  {context => {
     <PixelWindow
       load={context.load}
       actions={context.actions}
@@ -95,9 +101,8 @@ npm run demoStart
       host={context.webRtcHost}
       setVideoAspectRatio={context.actions.setVideoAspectRatio}
       setPlayerAspectRatio={context.actions.setPlayerAspectRatio}
-    />
-  }
-}
+    />;
+  }}
 </PixelStreamingContext.Consumer>
 ```
 
@@ -105,45 +110,45 @@ npm run demoStart
 
 `PixelStreamingContext.Consumer`経由で子コンポーネントから`ReactPixelStreaming`のプロパティやメソッド等のコンテキストにアクセスできます。
 
-* videoAspectRatio: Video Streamのアスペクト比,
-* videoRes: Video Streamの幅/高さ
-  * width
-  * haight
-* responseEventListeners: 登録済みのpixelStreamingResponseイベントリスナー
-* addResponseEventListener: pixelStreamingResponseイベントリスナーの登録
-* removeResponseEventListener: pixelStreamingResponseイベントリスナーの削除
-* emitter: WebRTC経由でコマンドを送信する(UE4でPixelStreamingInputEventが発火する)
-  * emitter(context.webRtcPlayerObj).emitUIInteraction
-  * emitter(context.webRtcPlayerObj).emitMouseDown
-  * emitter(context.webRtcPlayerObj).emitMouseUp
-  * emitter(context.webRtcPlayerObj).emitMouseMove
-  * emitter(context.webRtcPlayerObj).emitMouseWheel
-  * emitter(context.webRtcPlayerObj).sendInputData
-  * emitter(context.webRtcPlayerObj).emitUIInteraction
-  * emitter(context.webRtcPlayerObj).emitCommand
-  * emitter(context.webRtcPlayerObj).emitDescriptor
-* controlScheme: マウスの制御オプション
-* suppressBrowserKeys: ファンクションキーの制御オプション
-* fakeMouseWithTouches: タッチスクリーンの制御オプション
-* webrtcState: 
-* webRtcPlayerObj: インスタンス課されたwebrtcオブジェクト
-* webRtcPlayer: webrtcコンストラクタ
-* connect: 
-* clientConfig: webrtcの接続情報 
-* socket: インスタンス化されたwsオブジェクト
-* aggregatedStats<Array>: webRtcPlayerObjが収集したwebrtc統計(interval: 1sec)
-  * avgBitrate : 平均ビットレート(Kbps)
-  * highBitrate: 最大ビットレート(Kbps)
-  * bitrate: ビットレート(Kbps)
-  * bytesReceived: 受信データ量(bytes)
-  * framerate: FPS
-  * hightFramerate: 最大FPS
-  * lowFramerate: 最小FPS
-* actions: 基本的に気にしなくて良い
-  * updateWebRTCStat: 
-  * updateClientConfig:
-  * updateSocket: 
-  * setVideoAspectRatio: 
-  * addLatestStats: 
-  * setWebRTCPlayerObj: 
-* load:
+- videoAspectRatio: Video Stream のアスペクト比,
+- videoRes: Video Stream の幅/高さ
+  - width
+  - haight
+- responseEventListeners: 登録済みの pixelStreamingResponse イベントリスナー
+- addResponseEventListener: pixelStreamingResponse イベントリスナーの登録
+- removeResponseEventListener: pixelStreamingResponse イベントリスナーの削除
+- emitter: WebRTC 経由でコマンドを送信する(UE4 で PixelStreamingInputEvent が発火する)
+  - emitter(context.webRtcPlayerObj).emitUIInteraction
+  - emitter(context.webRtcPlayerObj).emitMouseDown
+  - emitter(context.webRtcPlayerObj).emitMouseUp
+  - emitter(context.webRtcPlayerObj).emitMouseMove
+  - emitter(context.webRtcPlayerObj).emitMouseWheel
+  - emitter(context.webRtcPlayerObj).sendInputData
+  - emitter(context.webRtcPlayerObj).emitUIInteraction
+  - emitter(context.webRtcPlayerObj).emitCommand
+  - emitter(context.webRtcPlayerObj).emitDescriptor
+- controlScheme: マウスの制御オプション
+- suppressBrowserKeys: ファンクションキーの制御オプション
+- fakeMouseWithTouches: タッチスクリーンの制御オプション
+- webrtcState:
+- webRtcPlayerObj: インスタンス課された webrtc オブジェクト
+- webRtcPlayer: webrtc コンストラクタ
+- connect:
+- clientConfig: webrtc の接続情報
+- socket: インスタンス化された ws オブジェクト
+- aggregatedStats<Array>: webRtcPlayerObj が収集した webrtc 統計(interval: 1sec)
+  - avgBitrate : 平均ビットレート(Kbps)
+  - highBitrate: 最大ビットレート(Kbps)
+  - bitrate: ビットレート(Kbps)
+  - bytesReceived: 受信データ量(bytes)
+  - framerate: FPS
+  - hightFramerate: 最大 FPS
+  - lowFramerate: 最小 FPS
+- actions: 基本的に気にしなくて良い
+  - updateWebRTCStat:
+  - updateClientConfig:
+  - updateSocket:
+  - setVideoAspectRatio:
+  - addLatestStats:
+  - setWebRTCPlayerObj:
+- load:
