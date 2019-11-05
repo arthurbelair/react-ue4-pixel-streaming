@@ -17,9 +17,13 @@ npm install shogo-hab/react-ue4-pixel-streaming --save
 
 ```jsx App.js
 import React from "react";
-import ReactPixelStreaming, {
-  PixelStreamingContext
-} from "pixel-streaming-component";
+import { render } from "react-dom";
+
+import ReactPixelStreaming from "ReactPixelStreaming";
+import { PixelStreamingContext } from "ReactPixelStreaming";
+import { PixelWindow } from "ReactPixelStreaming";
+import { emitter } from "ReactPixelStreaming";
+
 
 function App() {
   return (
