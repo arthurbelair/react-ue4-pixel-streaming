@@ -58,6 +58,8 @@ export default App;
 # for Component Develop
 
 ```bash
+git clone https://github.com/shogo-hab/react-ue4-pixel-streaming.git
+cd react-ue4-pixel-streaming
 npm install
 npm run demoStart
 ```
