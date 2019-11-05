@@ -28,12 +28,12 @@ class PixelWindow extends React.Component {
       <div style={style}
           onMouseEnter={e=>{
             // console.log("enter");
-            this.props.setDisableDragging(true);
+            // this.props.setDisableDragging(true);
           }}
 
           onMouseLeave={e=>{
             // console.log("leave");
-            this.props.setDisableDragging(false);
+            // this.props.setDisableDragging(false);
           }}
           //   e.persist(); 
           //   e.nativeEvent.stopImmediatePropagation();
@@ -89,5 +89,5 @@ const PlayerComponent = (webrtcState, clientConfig) => {
   if (webrtcState === "connected") return <div>{webrtcState}</div>;
   if (webrtcState === "playing") return <div>{webrtcState}</div>;
   if (webrtcState === "stop") return <div>{webrtcState}</div>;
-  return <div>test</div>;
+  return null;
 };

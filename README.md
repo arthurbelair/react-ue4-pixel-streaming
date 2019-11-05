@@ -136,7 +136,7 @@ npm run demoStart
 - controlScheme: マウスの制御オプション
 - suppressBrowserKeys: ファンクションキーの制御オプション
 - fakeMouseWithTouches: タッチスクリーンの制御オプション
-- webrtcState:
+- webrtcState: loading | disConnected | connecting | playing | stop
 - webRtcPlayerObj: インスタンス課された webrtc オブジェクト
 - webRtcPlayer: webrtc コンストラクタ
 - connect:
