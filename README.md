@@ -159,5 +159,5 @@ npm run demoStart
   - setWebRTCPlayerObj:
 - load:
 
-同名のメソッド/プロパティについては、[Pixel Streaming: プレイヤーWebページをカスタマイズする](https://docs.unrealengine.com/ja/Platforms/PixelStreaming/CustomPlayer/index.html)を参照。
+同名のメソッド/プロパティについては、「[Pixel Streaming: プレイヤーWebページをカスタマイズする](https://docs.unrealengine.com/ja/Platforms/PixelStreaming/CustomPlayer/index.html)」を参照。
 > 一部のみ実装の為、動かないのもあるので注意
