@@ -69,27 +69,32 @@ const YourComponent = context => (
 export default App;
 ```
 
-# for Component Develop
+# Component Development
 
 ```bash
 git clone https://github.com/shogo-hab/react-ue4-pixel-streaming.git
 cd react-ue4-pixel-streaming
 npm install
-npm run demoStart
+
+# examplesの起動
+npm run start
+
+# distに成果物を出力
+npm run transpile
 ```
 
-# API メモ
+# 雑なメモ
 
 ## Components
 
-- `ReactPixelStreaming`コンポーネント: WebRtc の接続管理や UE4 との疎通用のメソッド/プロパティを管理するラッパーコンポーネント。
-- `PixelWindow`コンポーネント: 実際に WebRTC の Video Stream がレンダリングされるコンポーネント。ReactPixelStreaming の子孫コンポーネントとして、context を受け取る必要がある。
+- `ReactPixelStreaming`コンポーネント: WebRtc の接続管理や UE4 との疎通用のメソッド/プロパティを管理するHOC。
+- `PixelWindow`コンポーネント: 実際に WebRTC の Video Stream がレンダリングされるコンポーネント。ReactPixelStreaming の子孫コンポーネントとしてcontext を受け取る必要がある。
 
 ## Attributes
 
 ### ReactPixelStreaming
 
-`ReactPixelStreaming`コンポーネントは以下の Attribute を受け取ります。
+`ReactPixelStreaming`コンポーネントは以下の Attribute を受け取る。
 
 ```jsx
 <ReactPixelStreaming
@@ -98,8 +103,8 @@ npm run demoStart
 >
 ```
 
-- webRtcHost<Strings>: WebRTC のバックエンドを渡します。
-- pixelStreamingResponseEvents<Array>: UE4 で responsePixelStreaming が発行された時の処理を渡します。
+- webRtcHost<Strings>: WebRTC のバックエンドを渡す。
+- pixelStreamingResponseEvents<Array>: UE4 で responsePixelStreaming が発行された時の処理を渡す。
 
 ```jsx
  [{name: "handler", handler: function(response){
@@ -109,7 +114,7 @@ npm run demoStart
 
 ### PixelWindow
 
-`PixelWindow`コンポーネントは context を介して以下の値を渡す必要があります。
+`PixelWindow`コンポーネントは context を介して以下の値を渡す。
 
 ```jsx
 <PixelStreamingContext.Consumer>
@@ -119,8 +124,6 @@ npm run demoStart
       actions={context.actions}
       connect={context.connect}
       host={context.webRtcHost}
-      setVideoAspectRatio={context.actions.setVideoAspectRatio}
-      setPlayerAspectRatio={context.actions.setPlayerAspectRatio}
     />;
   }}
 </PixelStreamingContext.Consumer>
@@ -128,9 +131,10 @@ npm run demoStart
 
 ### CustomComponent と context
 
-`PixelStreamingContext.Consumer`経由で子コンポーネントから`ReactPixelStreaming`のプロパティやメソッド等のコンテキストにアクセスできます。
+子孫コンポーネントは`PixelStreamingContext.Consumer`経由で`ReactPixelStreaming`のプロパティやメソッド等のコンテキストにアクセスできる。
 
-- videoAspectRatio: Video Stream のアスペクト比,
+#### 全く整理されてないプロパティやメソッドたち
+- videoAspectRatio: Video Stream のアスペクト比
 - videoRes: Video Stream の幅/高さ
   - width
   - haight
@@ -174,4 +178,3 @@ npm run demoStart
 - load:
 
 同名のメソッド/プロパティについては、「[Pixel Streaming: プレイヤーWebページをカスタマイズする](https://docs.unrealengine.com/ja/Platforms/PixelStreaming/CustomPlayer/index.html)」を参照。
-> 一部のみ実装の為、動かないのもあるので注意
