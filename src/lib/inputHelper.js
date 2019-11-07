@@ -14,8 +14,6 @@ export default function inputHelper(webRtcPlayerObj, settings) {
     sendInputData
   } = emitter(webRtcPlayerObj, settings);
 
-
-  
   // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
   const MouseButton = {
     MainButton: 0, // Left button.
@@ -380,7 +378,7 @@ export default function inputHelper(webRtcPlayerObj, settings) {
       );
       if (
         settings.inputOptions.suppressBrowserKeys // &&
-//        isKeyCodeBrowserKey(e.keyCode)
+        //        isKeyCodeBrowserKey(e.keyCode)
       ) {
         e.preventDefault();
       }

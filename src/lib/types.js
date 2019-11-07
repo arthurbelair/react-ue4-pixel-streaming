@@ -1,13 +1,12 @@
-
 const ControlSchemeType = {
-	// A mouse can lock inside the WebRTC player so the user can simply move the
-	// mouse to control the orientation of the camera. The user presses the
-	// Escape key to unlock the mouse.
-	LockedMouse : 0,
-	
-	// A mouse can hover over the WebRTC player so the user needs to click and
-	// drag to control the orientation of the camera.
-	HoveringMouse : 1
+  // A mouse can lock inside the WebRTC player so the user can simply move the
+  // mouse to control the orientation of the camera. The user presses the
+  // Escape key to unlock the mouse.
+  LockedMouse: 0,
+
+  // A mouse can hover over the WebRTC player so the user needs to click and
+  // drag to control the orientation of the camera.
+  HoveringMouse: 1
 };
 
 // TODO: ここはsettings
@@ -30,54 +29,47 @@ const ControlSchemeType = {
 
 // Must be kept in sync with PixelStreamingProtocol::EToUE4Msg C++ enum.
 const MessageType = {
+  /**********************************************************************/
 
-	/**********************************************************************/
+  /*
+   * Control Messages. Range = 0..49.
+   */
+  IFrameRequest: 0,
+  RequestQualityControl: 1,
+  MaxFpsRequest: 2,
+  AverageBitrateRequest: 3,
+  StartStreaming: 4,
+  StopStreaming: 5,
 
-	/*
-	 * Control Messages. Range = 0..49.
-	 */
-	IFrameRequest : 0,
-	RequestQualityControl: 1,
-    MaxFpsRequest: 2,
-    AverageBitrateRequest: 3,
-	StartStreaming: 4,
-	StopStreaming: 5,
+  /**********************************************************************/
 
-	/**********************************************************************/
+  /*
+   * Input Messages. Range = 50..89.
+   */
 
-	/*
-	 * Input Messages. Range = 50..89.
-	 */
+  // Generic Input Messages. Range = 50..59.
+  UIInteraction: 50,
+  Command: 51,
 
-	// Generic Input Messages. Range = 50..59.
-	UIInteraction: 50,
-	Command: 51,
+  // Keyboard Input Message. Range = 60..69.
+  KeyDown: 60,
+  KeyUp: 61,
+  KeyPress: 62,
 
-	// Keyboard Input Message. Range = 60..69.
-	KeyDown: 60,
-	KeyUp: 61,
-	KeyPress: 62,
+  // Mouse Input Messages. Range = 70..79.
+  MouseEnter: 70,
+  MouseLeave: 71,
+  MouseDown: 72,
+  MouseUp: 73,
+  MouseMove: 74,
+  MouseWheel: 75,
 
-	// Mouse Input Messages. Range = 70..79.
-	MouseEnter: 70,
-	MouseLeave: 71,
-	MouseDown: 72,
-	MouseUp: 73,
-	MouseMove: 74,
-	MouseWheel: 75,
+  // Touch Input Messages. Range = 80..89.
+  TouchStart: 80,
+  TouchEnd: 81,
+  TouchMove: 82
 
-	// Touch Input Messages. Range = 80..89.
-	TouchStart: 80,
-	TouchEnd: 81,
-	TouchMove: 82,
-
-	/**************************************************************************/
+  /**************************************************************************/
 };
 
-
-
-
-export {
-	MessageType,
-	ControlSchemeType,
-}
+export { MessageType, ControlSchemeType };

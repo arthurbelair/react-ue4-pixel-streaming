@@ -2,8 +2,7 @@ import { MessageType } from "./types";
 
 // TODO: coordのNormalizeなんとかする
 
-export default function emitter(webRtcPlayerObj, settings){
-
+export default function emitter(webRtcPlayerObj, settings) {
   const normalizeAndQuantizeUnsigned = (webRtcPlayerObj => {
     const playerElement = webRtcPlayerObj.video;
     const videoElement = webRtcPlayerObj.video;
@@ -174,6 +173,6 @@ export default function emitter(webRtcPlayerObj, settings){
     sendInputData,
     emitUIInteraction,
     emitCommand,
-    emitDescriptor,
+    emitDescriptor
   };
-};
+}
