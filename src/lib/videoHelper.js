@@ -1,7 +1,12 @@
 import inputHelper from "./inputHelper";
 import { ControlSchemeType } from "./types";
 
-export default function(webRtcPlayerObj, socket, responseEventListeners, addLatestStats) {
+export default function(
+  webRtcPlayerObj,
+  socket,
+  responseEventListeners,
+  addLatestStats
+) {
   // webrtc-offerで疎通開始
   webRtcPlayerObj.onWebRtcOffer = function(offer) {
     console.log("offer");
@@ -112,7 +117,7 @@ timestampStart: 1571536201934   // 収集開始のタイムスタンプ
       //      controlScheme:ControlSchemeType.LockedMouse
       fakeMouseWithTouches: true,
       controlScheme: ControlSchemeType.HoveringMouse,
-      suppressBrowserKeys: true, // keyboardイベントのpreventDefalutを有効化
+      suppressBrowserKeys: true // keyboardイベントのpreventDefalutを有効化
     }
   };
 
