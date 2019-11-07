@@ -87,8 +87,8 @@ npm run transpile
 
 ## Components
 
-- `ReactPixelStreaming`コンポーネント: WebRtc の接続管理や UE4 との疎通用のメソッド/プロパティを管理するHOC。
-- `PixelWindow`コンポーネント: 実際に WebRTC の Video Stream がレンダリングされるコンポーネント。ReactPixelStreaming の子孫コンポーネントとしてcontext を受け取る必要がある。
+- `ReactPixelStreaming`: WebRtc の接続管理や UE4 との疎通用のメソッド/プロパティを管理するHOC。
+- `PixelWindow`: 実際に WebRTC の Video Stream がレンダリングされるコンポーネント。ReactPixelStreaming の子孫コンポーネントとしてcontext を受け取る必要がある。
 
 ## Attributes
 
