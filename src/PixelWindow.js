@@ -24,7 +24,27 @@ class PixelWindow extends React.Component {
 
   render() {
     return (
-      <div style={style}>
+      // TODO: video上でのdrag and dropとhoverを無効化できるようにする
+      <div style={style}
+          onMouseEnter={e=>{
+            // console.log("enter");
+            // this.props.setDisableDragging(true);
+          }}
+
+          onMouseLeave={e=>{
+            // console.log("leave");
+            // this.props.setDisableDragging(false);
+          }}
+          //   e.persist(); 
+          //   e.nativeEvent.stopImmediatePropagation();
+          //   e.stopPropagation(); 
+          //  }}
+          //  onClick={e=>{
+          //   e.persist(); 
+          //   e.nativeEvent.stopImmediatePropagation();
+          //   e.stopPropagation(); 
+          //  }}
+      >
         <div id="player" className="fixed-size">
           <div id="videoPlayOverlay">
             <PixelStreamingContext.Consumer>
@@ -35,6 +55,10 @@ class PixelWindow extends React.Component {
                         webRtcPlayer={context.webRtcPlayer}
                         responseEventListeners={context.responseEventListeners}
                         socket={context.socket}
+                        setVideoAspectRatio={context.actions.setVideoAspectRatio}
+                        setPlayerAspectRatio={context.actions.setPlayerAspectRatio}
+                        addLatestStats={context.actions.addLatestStats}
+                        setWebRTCPlayerObj={context.actions.setWebRTCPlayerObj}
                       /> : PlayerComponent(context)
                 }
                 {/* {context =>
@@ -65,5 +89,5 @@ const PlayerComponent = (webrtcState, clientConfig) => {
   if (webrtcState === "connected") return <div>{webrtcState}</div>;
   if (webrtcState === "playing") return <div>{webrtcState}</div>;
   if (webrtcState === "stop") return <div>{webrtcState}</div>;
-  return <div>test</div>;
+  return null;
 };

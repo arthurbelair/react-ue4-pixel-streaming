@@ -21,114 +21,103 @@ var t0 = Date.now();
 
 function log(str) {
   console.log("".concat(Math.floor(Date.now() - t0), ": ") + str);
-}
+} // TODO: PlayerComponentに移植
+
 
 function setupHtmlEvents() {
   //Window events
   window.addEventListener('resize', resizePlayerStyle, true);
   window.addEventListener('orientationchange', onOrientationChange); //HTML elements controls
+  // TODO: 別にいらん
+  // let resizeCheckBox = document.getElementById('enlarge-display-to-fill-window-tgl');
+  // if (resizeCheckBox != null) {
+  // 	resizeCheckBox.onchange = function(event){
+  // 		resizePlayerStyle();
+  // 	}
+  // }
+  // TODO: QualityControl別で実装
+  // qualityControlOwnershipCheckBox = document.getElementById('quality-control-ownership-tgl');
+  // if (qualityControlOwnershipCheckBox != null) {
+  // 	qualityControlOwnershipCheckBox.onchange = function (event) {
+  // 		requestQualityControl();
+  // 	}
+  // }
+  // TODO: コントロール系は再実装する
+  // let prioritiseQualityCheckbox = document.getElementById('prioritise-quality-tgl');
+  // let qualityParamsSubmit = document.getElementById('quality-params-submit');
+  // if (prioritiseQualityCheckbox != null) {
+  //     prioritiseQualityCheckbox.onchange = function (event) {	        
+  //         if (prioritiseQualityCheckbox.checked) {
+  //             // TODO: This state should be read from the UE Application rather than from the initial values in the HTML
+  //             let lowBitrate = document.getElementById('low-bitrate-text').value;
+  //             let highBitrate = document.getElementById('high-bitrate-text').value;
+  //             let minFPS = document.getElementById('min-fps-text').value;
+  //             let initialDescriptor = {
+  //                 PrioritiseQuality: 1,
+  //                 LowBitrate: lowBitrate,
+  //                 HighBitrate: highBitrate,
+  //                 MinFPS: minFPS
+  //             }
+  //             // TODO: The descriptor should be sent as is to a generic handler on the UE side
+  //             // but for now we're just sending it as separate console commands
+  //             //emitUIInteraction(initialDescriptor); 
+  //             sendQualityConsoleCommands(initialDescriptor);
+  //             console.log(initialDescriptor);
+  //             qualityParamsSubmit.onclick = function (event) {
+  //                 let lowBitrate = document.getElementById('low-bitrate-text').value;
+  //                 let highBitrate = document.getElementById('high-bitrate-text').value;
+  //                 let minFPS = document.getElementById('min-fps-text').value;
+  //                 let descriptor = {
+  //                     PrioritiseQuality: 1,
+  //                     LowBitrate: lowBitrate,
+  //                     HighBitrate: highBitrate,
+  //                     MinFPS: minFPS
+  //                 }
+  //                 //emitUIInteraction(descriptor);
+  //                 sendQualityConsoleCommands(descriptor);
+  //                 console.log(descriptor);
+  //             }
+  //         } else { // Prioritise Quality unchecked
+  //             let initialDescriptor = {
+  //                 PrioritiseQuality: 0
+  //             }
+  //             //emitUIInteraction(initialDescriptor);
+  //             sendQualityConsoleCommands(initialDescriptor);
+  //             console.log(initialDescriptor);
+  //             qualityParamsSubmit.onclick = null;
+  //         }
+  //     }
+  // }
+  // let showFPSCheckBox = document.getElementById('show-fps-tgl');
+  // if (showFPSCheckBox != null) {
+  //     showFPSCheckBox.onchange = function (event) {
+  //         let consoleDescriptor = {
+  //             Console: 'stat fps'
+  //         }
+  //         emitUIInteraction(consoleDescriptor);
+  //     }
+  // }
+  // let matchViewportResolutionCheckBox = document.getElementById('match-viewport-res-tgl');
+  // if (matchViewportResolutionCheckBox != null) {
+  //     matchViewportResolutionCheckBox.onchange = function (event) {
+  //         matchViewportResolution = matchViewportResolutionCheckBox.checked;
+  //     }
+  // }
+  // let statsCheckBox = document.getElementById('show-stats-tgl');
+  // if (statsCheckBox != null) {
+  // 	statsCheckBox.onchange = function(event){
+  // 		let stats = document.getElementById('statsContainer');
+  // 		stats.style.display = (event.target.checked) ? "block" : "none";
+  // 	}
+  // }
+  // var kickButton = document.getElementById('kick-other-players-button');
+  // if(kickButton) {
+  // 	kickButton.onclick = function(event){
+  // 		socket.emit('kick', {});
+  // 	}
+  // }
+} // TODO: クオリティコントロール系のaction: コンポーネントに移植してok
 
-  var resizeCheckBox = document.getElementById('enlarge-display-to-fill-window-tgl');
-
-  if (resizeCheckBox != null) {
-    resizeCheckBox.onchange = function (event) {
-      resizePlayerStyle();
-    };
-  }
-
-  qualityControlOwnershipCheckBox = document.getElementById('quality-control-ownership-tgl');
-
-  if (qualityControlOwnershipCheckBox != null) {
-    qualityControlOwnershipCheckBox.onchange = function (event) {
-      requestQualityControl();
-    };
-  }
-
-  var prioritiseQualityCheckbox = document.getElementById('prioritise-quality-tgl');
-  var qualityParamsSubmit = document.getElementById('quality-params-submit');
-
-  if (prioritiseQualityCheckbox != null) {
-    prioritiseQualityCheckbox.onchange = function (event) {
-      if (prioritiseQualityCheckbox.checked) {
-        // TODO: This state should be read from the UE Application rather than from the initial values in the HTML
-        var lowBitrate = document.getElementById('low-bitrate-text').value;
-        var highBitrate = document.getElementById('high-bitrate-text').value;
-        var minFPS = document.getElementById('min-fps-text').value;
-        var initialDescriptor = {
-          PrioritiseQuality: 1,
-          LowBitrate: lowBitrate,
-          HighBitrate: highBitrate,
-          MinFPS: minFPS
-        }; // TODO: The descriptor should be sent as is to a generic handler on the UE side
-        // but for now we're just sending it as separate console commands
-        //emitUIInteraction(initialDescriptor); 
-
-        sendQualityConsoleCommands(initialDescriptor);
-        console.log(initialDescriptor);
-
-        qualityParamsSubmit.onclick = function (event) {
-          var lowBitrate = document.getElementById('low-bitrate-text').value;
-          var highBitrate = document.getElementById('high-bitrate-text').value;
-          var minFPS = document.getElementById('min-fps-text').value;
-          var descriptor = {
-            PrioritiseQuality: 1,
-            LowBitrate: lowBitrate,
-            HighBitrate: highBitrate,
-            MinFPS: minFPS
-          }; //emitUIInteraction(descriptor);
-
-          sendQualityConsoleCommands(descriptor);
-          console.log(descriptor);
-        };
-      } else {
-        // Prioritise Quality unchecked
-        var _initialDescriptor = {
-          PrioritiseQuality: 0
-        }; //emitUIInteraction(initialDescriptor);
-
-        sendQualityConsoleCommands(_initialDescriptor);
-        console.log(_initialDescriptor);
-        qualityParamsSubmit.onclick = null;
-      }
-    };
-  }
-
-  var showFPSCheckBox = document.getElementById('show-fps-tgl');
-
-  if (showFPSCheckBox != null) {
-    showFPSCheckBox.onchange = function (event) {
-      var consoleDescriptor = {
-        Console: 'stat fps'
-      };
-      emitUIInteraction(consoleDescriptor);
-    };
-  }
-
-  var matchViewportResolutionCheckBox = document.getElementById('match-viewport-res-tgl');
-
-  if (matchViewportResolutionCheckBox != null) {
-    matchViewportResolutionCheckBox.onchange = function (event) {
-      matchViewportResolution = matchViewportResolutionCheckBox.checked;
-    };
-  }
-
-  var statsCheckBox = document.getElementById('show-stats-tgl');
-
-  if (statsCheckBox != null) {
-    statsCheckBox.onchange = function (event) {
-      var stats = document.getElementById('statsContainer');
-      stats.style.display = event.target.checked ? "block" : "none";
-    };
-  }
-
-  var kickButton = document.getElementById('kick-other-players-button');
-
-  if (kickButton) {
-    kickButton.onclick = function (event) {
-      socket.emit('kick', {});
-    };
-  }
-}
 
 function sendQualityConsoleCommands(descriptor) {
   if (descriptor.PrioritiseQuality != null) {
@@ -162,24 +151,29 @@ function sendQualityConsoleCommands(descriptor) {
     };
     emitUIInteraction(_consoleDescriptor3);
   }
-}
+} // TODO: View関連: WebRTCの接続状態に応じてPlayerの表示を切り替えるFunction
+// class, htmlElement, handlerを引数にとる
+// ReactComponentのPixelWindow.jsに移植中
+
 
 function setOverlay(htmlClass, htmlElement, onClickFunction) {
-  var videoPlayOverlay = document.getElementById('videoPlayOverlay');
+  var videoPlayOverlay = document.getElementById('videoPlayOverlay'); // videoPlayOverlayが存在してなければ、element作ってそこに追加する
 
   if (!videoPlayOverlay) {
     var playerDiv = document.getElementById('player');
     videoPlayOverlay = document.createElement('div');
     videoPlayOverlay.id = 'videoPlayOverlay';
     playerDiv.appendChild(videoPlayOverlay);
-  } // Remove existing html child elements so we can add the new one
+  } // videoPlayOverlayに子供エレメント存在してれば削除
+  // Remove existing html child elements so we can add the new one
 
 
   while (videoPlayOverlay.lastChild) {
     videoPlayOverlay.removeChild(videoPlayOverlay.lastChild);
-  }
+  } // append
 
-  if (htmlElement) videoPlayOverlay.appendChild(htmlElement);
+
+  if (htmlElement) videoPlayOverlay.appendChild(htmlElement); // 子供にfunctionを追加
 
   if (onClickFunction) {
     videoPlayOverlay.addEventListener('click', function onOverlayClick(event) {
@@ -187,6 +181,7 @@ function setOverlay(htmlClass, htmlElement, onClickFunction) {
       videoPlayOverlay.removeEventListener('click', onOverlayClick);
     });
   } // Remove existing html classes so we can set the new one
+  // classを張り替え
 
 
   var cl = videoPlayOverlay.classList;
@@ -196,23 +191,26 @@ function setOverlay(htmlClass, htmlElement, onClickFunction) {
   }
 
   videoPlayOverlay.classList.add(htmlClass);
-}
+} // TODO: setOverlayをplayerに移植
+// TODO: View関連: 接続画面 -> PlayerComponentに移植
+
 
 function showConnectOverlay() {
   var startText = document.createElement('div');
   startText.id = 'playButton';
-  startText.innerHTML = 'Click to start';
-  setOverlay('clickableState', startText, function (event) {
-    connect();
-  });
-}
+  startText.innerHTML = 'Click to start'; // setOverlay('clickableState', startText, event => {
+  // 	connect();
+  // });
+} // TODO: View関連: PlayerComponentに移植
+
 
 function showTextOverlay(text) {
   var textOverlay = document.createElement('div');
   textOverlay.id = 'messageOverlay';
   textOverlay.innerHTML = text ? text : '';
   setOverlay('textDisplayState', textOverlay);
-}
+} // TODO: View関連: 再生画面 -> PlayerComponentに移植
+
 
 function showPlayOverlay() {
   var img = document.createElement('img');
@@ -228,7 +226,8 @@ function showPlayOverlay() {
 
 function hideOverlay() {
   setOverlay('hiddenState');
-}
+} // TODO: WebRTCに接続するためのfunction
+
 
 function createWebRtcOffer() {
   if (webRtcPlayerObj) {
@@ -243,11 +242,13 @@ function createWebRtcOffer() {
 
 function sendInputData(data) {
   if (webRtcPlayerObj) webRtcPlayerObj.send(data);
-}
+} // TODO: ListenerはHOCにバインド
+
 
 function addResponseEventListener(name, listener) {
   responseEventListeners.set(name, listener);
-}
+} // TODO: ListenerはHOCにバインド
+
 
 function removeResponseEventListener(name) {
   responseEventListeners.remove(name);
@@ -257,12 +258,14 @@ function removeResponseEventListener(name) {
 var ToClientMessageType = {
   QualityControlOwnership: 0,
   Response: 1
-};
+}; // TODO: プレイヤーの組み立て
+// video streamコンポーネント化する
 
 function setupWebRtcPlayer(htmlElement, clientConfig) {
   webRtcPlayerObj = new webRtcPlayer({
     peerConnectionOptions: clientConfig.peerConnectionOptions
-  });
+  }); // webRtcPlayerObj.videoがElement
+
   htmlElement.appendChild(webRtcPlayerObj.video);
 
   webRtcPlayerObj.onWebRtcOffer = function (offer) {
@@ -399,7 +402,8 @@ function setupWebRtcPlayer(htmlElement, clientConfig) {
   registerInputs(webRtcPlayerObj.video);
   createWebRtcOffer();
   return webRtcPlayerObj.video;
-}
+} // 表示のレイアウトの制御関連
+
 
 var styleWidth;
 var styleHeight;
@@ -463,7 +467,8 @@ function resizePlayerStyleToFillWindow(playerElement) {
 
     playerElement.style = "top: " + styleTop + "px; left: " + styleLeft + "px; width: " + styleWidth + "px; height: " + styleHeight + "px; cursor: " + styleCursor + "; " + styleAdditional;
   }
-}
+} // TODO: resize系はCSS-in-JSで処理する
+
 
 function resizePlayerStyleToActualSize(playerElement) {
   var videoElement = playerElement.getElementsByTagName("VIDEO"); // Display image in its actual size
@@ -480,7 +485,8 @@ function resizePlayerStyleToArbitrarySize(playerElement) {
   var videoElement = playerElement.getElementsByTagName("VIDEO"); //Video is now 100% of the playerElement, so set the playerElement style
 
   playerElement.style = "top: 0px; left: 0px; width: " + styleWidth + "px; height: " + styleHeight + "px; cursor: " + styleCursor + "; " + styleAdditional;
-}
+} // TODO: resize系はCSS-in-JSで処理する
+
 
 function resizePlayerStyle(event) {
   var playerElement = document.getElementById('player');
@@ -1006,7 +1012,7 @@ function registerTouchEvents(playerElement) {
     var data = new DataView(new ArrayBuffer(2 + 6 * touches.length));
     data.setUint8(0, type);
     data.setUint8(1, touches.length);
-    var _byte = 2;
+    var byte = 2;
 
     for (var t = 0; t < touches.length; t++) {
       var touch = touches[t];
@@ -1018,15 +1024,15 @@ function registerTouchEvents(playerElement) {
       }
 
       var coord = normalizeAndQuantizeUnsigned(x, y);
-      data.setUint16(_byte, coord.x, true);
-      _byte += 2;
-      data.setUint16(_byte, coord.y, true);
-      _byte += 2;
-      data.setUint8(_byte, fingerIds[touch.identifier], true);
-      _byte += 1;
-      data.setUint8(_byte, 255 * touch.force, true); // force is between 0.0 and 1.0 so quantize into byte.
+      data.setUint16(byte, coord.x, true);
+      byte += 2;
+      data.setUint16(byte, coord.y, true);
+      byte += 2;
+      data.setUint8(byte, fingerIds[touch.identifier], true);
+      byte += 1;
+      data.setUint8(byte, 255 * touch.force, true); // force is between 0.0 and 1.0 so quantize into byte.
 
-      _byte += 1;
+      byte += 1;
     }
 
     sendInputData(data.buffer);
@@ -1178,57 +1184,69 @@ function onExpandOverlay_Click() {
   } else {
     subElement.style.display = "none";
   }
-}
+} // TODO: connectだけ呼べば良さそう
+// function start() {
+// 	let statsDiv = document.getElementById("stats");
+// 	if(statsDiv){
+// 		statsDiv.innerHTML = 'Not connected';
+// 	}
+// 	if (!connect_on_load || is_reconnection){
+// 		showConnectOverlay();
+// 		resizePlayerStyle();
+// 	} else {
+// 		connect();
+// 	}
+// }
 
-function start() {
-  var statsDiv = document.getElementById("stats");
 
-  if (statsDiv) {
-    statsDiv.innerHTML = 'Not connected';
-  }
+function connect(host, actions) {
+  socket = io(host);
+  actions.updateSocket(socket);
+  actions.updateWebRTCStat("socketConnecting"); // clientConfig帰ってきたらwebRTCセッションを貼ってplayerをインスタンス化する
+  // TODO: onClientConfigをStateに修正
 
-  if (!connect_on_load || is_reconnection) {
-    showConnectOverlay();
-    resizePlayerStyle();
-  } else {
-    connect();
-  }
-}
-
-function connect() {
-  socket = io();
   socket.on('clientConfig', function (clientConfig) {
-    onClientConfig(clientConfig);
+    // onClientConfig(clientConfig);
+    console.log("update clientConfig: " + clientConfig);
+    actions.updateClientConfig(clientConfig);
   });
   socket.on('message', function (data) {
     console.log("unrecognised message ".concat(data.byteLength, ": ").concat(data.slice(0, 50).toString("hex")));
-  });
-  socket.on('clientCount', function (data) {
-    var kickButton = document.getElementById('kick-other-players-button');
-    if (kickButton) kickButton.value = "Kick (".concat(data.count, ")");
-  });
+  }); // TODO: キックは後で見る
+  // socket.on('clientCount', function (data) {
+  // 	var kickButton = document.getElementById('kick-other-players-button');
+  // 	if (kickButton)
+  // 		kickButton.value = `Kick (${data.count})`;
+  // });
+  // signaling serverに繫がったらuserconfigを送る
+  // signaling serverからはclientConfig返ってくる
+
   socket.on('connect', function () {
+    actions.updateWebRTCStat("socketConnected");
     log("connected");
-    sendUserConfig();
+    sendUserConfig(actions);
   });
   socket.on('error', function (error) {
+    actions.updateWebRTCStat(error);
     console.log("WS error ".concat(error));
-  });
+  }); // TODO: 状態変わるのでcallbackを追加
+
   socket.on('disconnect', function (reason) {
-    console.log("Connection is closed: ".concat(reason));
-    socket.close();
-    socket = undefined;
-    is_reconnection = true; // destroy `webRtcPlayerObj` if any
+    actions.updateWebRTCStat("socketDisConnected");
+    console.log("Connection is closed: ".concat(reason)); // socket.close();
+    // socket = undefined;
+    // is_reconnection = true;
+    // destroy `webRtcPlayerObj` if any
+    // let playerDiv = document.getElementById('player');
+    // if (webRtcPlayerObj) {
+    // 	playerDiv.removeChild(webRtcPlayerObj.video);
+    // 	webRtcPlayerObj.close();
+    // 	webRtcPlayerObj = undefined;
+    // }
+    // reconnect
+    // start();
 
-    var playerDiv = document.getElementById('player');
-
-    if (webRtcPlayerObj) {
-      playerDiv.removeChild(webRtcPlayerObj.video);
-      webRtcPlayerObj.close();
-      webRtcPlayerObj = undefined;
-    }
-
-    start();
+    connect(host, actions);
   });
 }
 /**
@@ -1236,24 +1254,27 @@ function connect() {
  */
 
 
-function sendUserConfig() {
+function sendUserConfig(actions) {
   var userConfig = {
     emitData: 'ArrayBuffer'
   };
   var userConfigString = JSON.stringify(userConfig);
   log("userConfig = ".concat(userConfigString));
+  actions.updateWebRTCStat("webrtcConnecting");
   socket.emit('userConfig', userConfigString);
 }
 /**
  * Config data received from WebRTC sender via the Cirrus web server
  */
+// TODO: clientConfigをstateに突っ込む
 
 
 function onClientConfig(clientConfig) {
-  log("clientConfig = ".concat(JSON.stringify(clientConfig)));
-  var playerDiv = document.getElementById('player');
-  var playerElement = setupWebRtcPlayer(playerDiv, clientConfig);
-  resizePlayerStyle();
+  log("clientConfig = ".concat(JSON.stringify(clientConfig))); // let playerDiv = document.getElementById('player');
+  // TODO: jsxに移植
+
+  var playerElement = setupWebRtcPlayer(playerDiv, clientConfig); // resizePlayerStyle();
+  // TODO: マウス設定
 
   switch (inputOptions.controlScheme) {
     case ControlSchemeType.HoveringMouse:
@@ -1272,13 +1293,15 @@ function onClientConfig(clientConfig) {
 }
 
 function load() {
-  setupHtmlEvents();
-  registerKeyboardEvents();
-  start();
+  // TODO: setupHtmlEventsはコントロール系なのでなくても大丈夫
+  // setupHtmlEvents();
+  // TODO: これはいる
+  registerKeyboardEvents(); // start();
 }
 
 module.exports = {
   load: load,
+  connect: connect,
   addResponseEventListener: addResponseEventListener,
   removeResponseEventListener: removeResponseEventListener,
   emitUIInteraction: emitUIInteraction,
@@ -1286,5 +1309,9 @@ module.exports = {
   emitDescriptor: emitDescriptor,
   controlScheme: inputOptions.controlScheme,
   suppressBrowserKeys: inputOptions.suppressBrowserKeys,
-  fakeMouseWithTouches: inputOptions.fakeMouseWithTouches
+  fakeMouseWithTouches: inputOptions.fakeMouseWithTouches,
+  webRtcPlayerObj: webRtcPlayerObj,
+  webRtcPlayer: webRtcPlayer,
+  //	socket: socket,
+  responseEventListeners: responseEventListeners
 };

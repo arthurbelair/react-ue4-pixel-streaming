@@ -1,8 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App'
-// import App from './App';
-// import * as serviceWorker from './serviceWorker';
+import ReactPixelStreaming from "./ReactPixelStreaming";
+import PixelStreamingContext from "./lib/pixel-streaming-context";
+import PixelWindow from "./PixelWindow";
+import emitter from "./lib/emitter";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export default ReactPixelStreaming;
+export {PixelStreamingContext, emitter, PixelWindow};

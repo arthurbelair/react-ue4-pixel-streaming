@@ -1,8 +1,12 @@
 import React, { Component } from "react";
-import PixelWindow from "./PixelWindow";
 import PixelStreamingClient from "./lib/pixel-streaming-client";
 import PixelStreamingContext from "./lib/pixel-streaming-context";
+import "./lib/emitter";
 
+
+import emitter from "./lib/emitter";
+
+// FPS toka no Statics Chart wo tuika
 export default class ReactPixelStreaming extends Component {
   constructor(props) {
     super(props);
@@ -12,26 +16,104 @@ export default class ReactPixelStreaming extends Component {
       addResponseEventListener: PixelStreamingClient.addResponseEventListener,
       removeResponseEventListener:
         PixelStreamingClient.removeResponseEventListener,
-      emitCommand: PixelStreamingClient.emitCommand,
-      emitDescriptor: PixelStreamingClient.emitDescriptor,
-      emitUIInteraction: PixelStreamingClient.emitUIInteraction,
+      emitter: emitter,
       controlScheme: PixelStreamingClient.controlScheme,
       suppressBrowserKeys: PixelStreamingClient.suppressBrowserKeys,
       fakeMouseWithTouches: PixelStreamingClient.fakeMouseWithTouches,
       webrtcState: "",
-      // webRtcPlayerObjをstate化
-      webRtcPlayerObj: PixelStreamingClient.webRtcPlayerObj,
+      webRtcPlayerObj: {}, //PixelStreamingClient.webRtcPlayerObj,
       webRtcPlayer: PixelStreamingClient.webRtcPlayer,
       connect: PixelStreamingClient.connect,
       clientConfig: "",
       socket: {},
+      aggregatedStats: [],
       actions: {
         updateWebRTCStat: this.updateWebRTCStat,
         updateClientConfig: this.updateClientConfig,
         updateSocket: this.updateSocket,
-      }
+        setPlayerAspectRatio: this.setPlayerAspectRatio,
+        setVideoAspectRatio: this.setVideoAspectRatio,
+        addLatestStats: this.addLatestStats,
+        setWebRTCPlayerObj: this.setWebRTCPlayerObj
+      },
+      // TODO: video/playerAspect
+      //  var playerAspectRatio = playerElement.clientHeight / playerElement.clientWidth; // We want to keep the video ratio correct for the video stream
+      //  var videoAspectRatio = videoElement.videoHeight / videoElement.videoWidth;
+      playerAspectRatio: 1,
+      videoAspectRatio: 1,
+      playerRes: {},
+      videoRes: {},
     };
+
+    // eventの登録
+    props.pixelStreamingResponseEvents.forEach((event)=>{
+      PixelStreamingClient.addResponseEventListener(event.name, event.handler.bind(this));
+    })
   }
+
+  setWebRTCPlayerObj = player => {
+    this.setState({
+      webRtcPlayerObj: player
+    });
+  };
+
+  addLatestStats = (stats, videoElement) => {
+    this.setState({
+      aggregatedStats: [...this.state.aggregatedStats, stats],
+      videoAspectRatio: videoElement.videoHeight / videoElement.videoWidth,
+      videoRes: {
+        width: videoElement.videoWidth,
+        height: videoElement.videoHeight
+      }
+    });
+  };
+
+  setPlayerAspectRatio = playerElement => {
+    this.setState({
+      playerAspectRatio: playerElement.clientHeight / playerElement.clientWidth,
+      playerRes: {
+        width: playerElement.clientWidth,
+        height: playerElement.clientHeight
+      }
+    });
+  };
+
+  setVideoAspectRatio = videoElement => {
+    this.setState({
+      videoAspectRatio: videoElement.videoHeight / videoElement.videoWidth,
+      videoRes: {
+        width: videoElement.videoWidth,
+        height: videoElement.videoHeight
+      }
+    });
+  };
+
+  setDisableDragging = disable => {
+    this.setState({
+      disableDragging: disable
+    });
+  };
+
+  setEnableResizing = enable => {
+    if (enable) {
+      this.setState({
+        enableResizing: {
+          bottom: true,
+          bottomLeft: true,
+          bottomRight: true,
+          left: true,
+          right: true,
+          top: true,
+          topLeft: true,
+          topRight: true
+        }
+      });
+      return;
+    }
+    this.setState({
+      enableResizing: {}
+    });
+  };
 
   updateWebRTCStat = webrtcStat => {
     this.setState({
@@ -41,10 +123,9 @@ export default class ReactPixelStreaming extends Component {
 
   updateSocket = socket => {
     this.setState({
-      socket: socket,
+      socket: socket
     });
   };
-
 
   updateClientConfig = clientConfig => {
     console.log(clientConfig);
@@ -53,34 +134,15 @@ export default class ReactPixelStreaming extends Component {
     });
   };
 
-
-  componentDidMount() {
-    //        this.state.addResponseEventListener("handle_responses", this.props.handler);
-    //        console.log("atached handler");
-  }
-
-  componentWillUnmount() {
-    //        this.state.removeResponseEventListener("handle_responses");
-    //        console.log("removed handler");
-  }
-
   render() {
     return (
       <PixelStreamingContext.Provider value={this.state}>
         <div style={this.props.style}>
-          <PixelStreamingContext.Consumer>
-            {context => (
-              <PixelWindow
-                load={context.load}
-                actions={context.actions}
-                connect={context.connect}
-                host={this.props.webRtcHost}
-              />
-            )}
-          </PixelStreamingContext.Consumer>
+
           {this.props.children}
         </div>
       </PixelStreamingContext.Provider>
     );
   }
 }
+

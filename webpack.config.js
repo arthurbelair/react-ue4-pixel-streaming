@@ -28,6 +28,6 @@ module.exports = {
     },
     // 開発用Webサーバのポートを指定します。
     devServer: {
-        port: 3001
+        port: 3000
     }
 }
