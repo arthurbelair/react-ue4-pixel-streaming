@@ -31,8 +31,8 @@ function App() {
           {context => (
             <div>
               <PixelWindow
-                videoStyle={{width: 1280, height:720}}
-                windowStyle={{width: 1300, height:740}}
+                videoStyle={{ width: 1280, height: 720 }}
+                windowStyle={{ width: 1300, height: 740 }}
                 load={context.load}
                 actions={context.actions}
                 connect={context.connect}
@@ -48,17 +48,22 @@ function App() {
 }
 
 const YourComponent = context => (
-  <button
-    disabled={context.webrtcState !== "playing"}
-    onClick={() => {
-      context.emitter(context.webRtcPlayerObj).emitUIInteraction({
-        Command: "foo",
-        Value: "bar"
-      });
-    }}
-  >
-    My Component
-  </button>
+  <div>
+    {context.context.webrtcState}
+    <button
+      disabled={context.context.webrtcState !== "connected"}
+      onClick={() => {
+        context.context
+          .emitter(context.context.webRtcPlayerObj)
+          .emitUIInteraction({
+            Command: "foo",
+            Value: "bar"
+          });
+      }}
+    >
+      My Component
+    </button>
+  </div>
 );
 
 export default App;
