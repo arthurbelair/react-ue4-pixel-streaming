@@ -67,6 +67,7 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      console.log(this.props.windowStyle);
       return (// TODO: video上でのdrag and dropとhoverを無効化できるようにする
         _react.default.createElement("div", {
           style: this.props.windowStyle,

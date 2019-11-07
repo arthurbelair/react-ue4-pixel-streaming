@@ -23,6 +23,7 @@ class PixelWindow extends React.Component {
   componentWillUnmount() {}
 
   render() {
+    console.log(this.props.windowStyle);
     return (
       // TODO: video上でのdrag and dropとhoverを無効化できるようにする
       <div style={this.props.windowStyle}
