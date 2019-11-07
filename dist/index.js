@@ -1,21 +1,15 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "PixelStreamingContext", {
-  enumerable: true,
-  get: function get() {
-    return _pixelStreamingContext.default;
-  }
-});
-exports.default = void 0;
+var _react = _interopRequireDefault(require("react"));
 
-var _ReactPixelStreaming = _interopRequireDefault(require("./ReactPixelStreaming"));
+var _reactDom = _interopRequireDefault(require("react-dom"));
 
-var _pixelStreamingContext = _interopRequireDefault(require("./lib/pixel-streaming-context"));
+require("./index.css");
+
+var _App = _interopRequireDefault(require("./App"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _default = _ReactPixelStreaming.default;
-exports.default = _default;
+// import App from './App';
+// import * as serviceWorker from './serviceWorker';
+_reactDom.default.render(_react.default.createElement(_App.default, null), document.getElementById('root'));

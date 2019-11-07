@@ -9,7 +9,9 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _pixelStreamingContext = _interopRequireDefault(require("./lib/pixel-streaming-context"));
 
-var _PixelVideo = _interopRequireDefault(require("./PixelVideo"));
+var _videoHelper = _interopRequireDefault(require("./lib/videoHelper"));
+
+var _resizeObserver = _interopRequireDefault(require("@juggle/resize-observer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35,31 +37,85 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var PixelWindow =
+// TODO: keyboard/mouse event
+var PixelVideo =
 /*#__PURE__*/
 function (_React$Component) {
-  _inherits(PixelWindow, _React$Component);
+  _inherits(PixelVideo, _React$Component);
 
-  function PixelWindow(props) {
+  function PixelVideo(props) {
     var _this;
 
-    _classCallCheck(this, PixelWindow);
+    _classCallCheck(this, PixelVideo);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(PixelWindow).call(this, props));
-    _this.state = {};
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(PixelVideo).call(this, props));
+    _this.state = {
+      webRtcPlayerObj: {}
+    };
     return _this;
   }
 
-  _createClass(PixelWindow, [{
+  _createClass(PixelVideo, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      // PixelStreamingのロード
-      // loadでkeyInputのバインド
-      this.props.load(); // 黙ってconnect()
-      // TODO: connectの状態をstateに反映できるように改修
-      // TODO: 接続ホストを引数で渡せるように修正
+      var _this2 = this;
 
-      this.props.connect(this.props.host, this.props.actions);
+      console.log(this.props.clientConfig.peerConnectionOptions);
+      var webRtcPlayerObj = new this.props.webRtcPlayer({
+        peerConnectionOptions: this.props.clientConfig.peerConnectionOptions
+      });
+      console.log(webRtcPlayerObj);
+      this.setState({
+        webRtcPlayerObj: webRtcPlayerObj
+      });
+      this.props.setWebRTCPlayerObj(webRtcPlayerObj); // Elementを挿入
+
+      this.refs.video.appendChild(webRtcPlayerObj.video); // videoのサイズ設定
+
+      webRtcPlayerObj.video.style.setProperty("width", "100%");
+      webRtcPlayerObj.video.style.setProperty("padding", "10px"); // videoのsizeをモニター
+
+      var resizeObserver = new _resizeObserver.default(function (entries) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var entry = _step.value;
+            var rect = entry.contentRect; // console.log(rect.top, rect.left);
+            // console.log(rect.width, rect.height);
+
+            _this2.props.setVideoAspectRatio(webRtcPlayerObj.video);
+
+            _this2.props.setPlayerAspectRatio(webRtcPlayerObj.video); // TODO: video解像度とプレイヤーサイズ仕込む
+
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      });
+      resizeObserver.observe(webRtcPlayerObj.video); // video上での右クリメニュー殺しとく
+
+      webRtcPlayerObj.video.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      }, false); // webRtcPlayerにeventとか設定
+
+      (0, _videoHelper.default)(webRtcPlayerObj, this.props.socket, this.props.responseEventListeners, this.props.addLatestStats); // createOffer
+
+      webRtcPlayerObj.createOffer(); // マウスとかの設定
+      // registerInputs(webRtcPlayerObj.video);
     }
   }, {
     key: "componentWillUnmount",
@@ -67,58 +123,49 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      return (// TODO: video上でのdrag and dropとhoverを無効化できるようにする
-        _react.default.createElement("div", {
-          style: style,
-          onMouseEnter: function onMouseEnter(e) {// console.log("enter");
-            // this.props.setDisableDragging(true);
-          },
-          onMouseLeave: function onMouseLeave(e) {// console.log("leave");
-            // this.props.setDisableDragging(false);
-          } //   e.persist(); 
-          //   e.nativeEvent.stopImmediatePropagation();
-          //   e.stopPropagation(); 
-          //  }}
-          //  onClick={e=>{
-          //   e.persist(); 
-          //   e.nativeEvent.stopImmediatePropagation();
-          //   e.stopPropagation(); 
-          //  }}
-
-        }, _react.default.createElement("div", {
-          id: "player",
-          className: "fixed-size"
-        }, _react.default.createElement("div", {
-          id: "videoPlayOverlay"
-        }, _react.default.createElement(_pixelStreamingContext.default.Consumer, null, function (context) {
-          return context.clientConfig ? _react.default.createElement(_PixelVideo.default, {
-            clientConfig: context.clientConfig,
-            webRtcPlayer: context.webRtcPlayer,
-            responseEventListeners: context.responseEventListeners,
-            socket: context.socket,
-            setVideoAspectRatio: context.actions.setVideoAspectRatio,
-            setPlayerAspectRatio: context.actions.setPlayerAspectRatio,
-            addLatestStats: context.actions.addLatestStats,
-            setWebRTCPlayerObj: context.actions.setWebRTCPlayerObj
-          }) : PlayerComponent(context);
-        }))))
-      );
+      return _react.default.createElement("div", {
+        ref: "video",
+        style: {
+          width: "100%"
+        }
+      });
     }
   }]);
 
-  return PixelWindow;
+  return PixelVideo;
 }(_react.default.Component);
 
 var style = {};
-var _default = PixelWindow;
-exports.default = _default;
+var _default = PixelVideo; // 	// TODO: マウス設定
+// 	switch (inputOptions.controlScheme) {
+// 		case ControlSchemeType.HoveringMouse:
+// 			registerHoveringMouseEvents(playerElement);
+// 			break;
+// 		case ControlSchemeType.LockedMouse:
+// 			registerLockedMouseEvents(playerElement);
+// 			break;
+// 		default:
+// 			console.log(`ERROR: Unknown control scheme ${inputOptions.controlScheme}`);
+// 			registerLockedMouseEvents(playerElement);
+// 			break;
+// 	}
+// }
 
-var PlayerComponent = function PlayerComponent(webrtcState, clientConfig) {
-  if (webrtcState === "loading") return _react.default.createElement("div", null, webrtcState);
-  if (webrtcState === "disConnected") return _react.default.createElement("div", null, webrtcState);
-  if (webrtcState === "connecting") return _react.default.createElement("div", null, webrtcState);
-  if (webrtcState === "connected") return _react.default.createElement("div", null, webrtcState);
-  if (webrtcState === "playing") return _react.default.createElement("div", null, webrtcState);
-  if (webrtcState === "stop") return _react.default.createElement("div", null, webrtcState);
-  return null;
-};
+exports.default = _default;
+var marks = [{
+  value: 0,
+  label: "0°C"
+}, {
+  value: 20,
+  label: "20°C"
+}, {
+  value: 37,
+  label: "37°C"
+}, {
+  value: 100,
+  label: "100°C"
+}];
+
+function valuetext(value) {
+  return "".concat(value, "\xB0C");
+}
