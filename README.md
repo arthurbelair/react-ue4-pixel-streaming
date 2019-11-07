@@ -15,13 +15,10 @@ npm install shogo-hab/react-ue4-pixel-streaming --save
 
 ```jsx App.js
 import React from "react";
-import { render } from "react-dom";
 
-import ReactPixelStreaming from "ReactPixelStreaming";
-import { PixelStreamingContext } from "ReactPixelStreaming";
-import { PixelWindow } from "ReactPixelStreaming";
-import { emitter } from "ReactPixelStreaming";
-
+import ReactPixelStreaming from "react-ue4-pixel-streaming";
+import { PixelStreamingContext } from "react-ue4-pixel-streaming";
+import { PixelWindow } from "react-ue4-pixel-streaming";
 
 function App() {
   return (
@@ -29,26 +26,38 @@ function App() {
       webRtcHost="localhost"
       pixelStreamingResponseEvents={[]}
     >
-      <PixelStreamingContext.Consumer>
-        {context => (
-          <div>
-            <PixelWindow
-              load={context.load}
-              actions={context.actions}
-              connect={context.connect}
-              host={context.webRtcHost}
-              setVideoAspectRatio={context.actions.setVideoAspectRatio}
-              setPlayerAspectRatio={context.actions.setPlayerAspectRatio}
-            />
-            <YourComponent context={context} />
-          </div>
-        )}
-      </PixelStreamingContext.Consumer>
+      <div>
+        <PixelStreamingContext.Consumer>
+          {context => (
+            <div>
+              <PixelWindow
+                load={context.load}
+                actions={context.actions}
+                connect={context.connect}
+                host={context.webRtcHost}
+              />
+              <YourComponent context={context} />
+            </div>
+          )}
+        </PixelStreamingContext.Consumer>
+      </div>
     </ReactPixelStreaming>
   );
 }
 
-const YourComponent = context => <div>My Component</div>;
+const YourComponent = context => (
+  <button
+    disabled={context.webrtcState !== "playing"}
+    onClick={() => {
+      context.emitter(context.webRtcPlayerObj).emitUIInteraction({
+        Command: "foo",
+        Value: "bar"
+      });
+    }}
+  >
+    My Component
+  </button>
+);
 
 export default App;
 ```
