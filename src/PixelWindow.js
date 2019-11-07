@@ -23,9 +23,10 @@ class PixelWindow extends React.Component {
   componentWillUnmount() {}
 
   render() {
+    console.log(this.props.windowStyle);
     return (
       // TODO: video上でのdrag and dropとhoverを無効化できるようにする
-      <div style={style}
+      <div style={this.props.windowStyle}
           onMouseEnter={e=>{
             // console.log("enter");
             // this.props.setDisableDragging(true);
@@ -45,7 +46,7 @@ class PixelWindow extends React.Component {
           //   e.stopPropagation(); 
           //  }}
       >
-        <div id="player" className="fixed-size">
+        <div id="player" className="fixed-size" style={this.props.videoStyle}>
           <div id="videoPlayOverlay">
             <PixelStreamingContext.Consumer>
                 {context => 
@@ -77,8 +78,6 @@ class PixelWindow extends React.Component {
     );
   }
 }
-
-const style = {};
 
 export default PixelWindow;
 

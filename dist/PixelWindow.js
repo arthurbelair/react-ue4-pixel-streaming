@@ -67,9 +67,10 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      console.log(this.props.windowStyle);
       return (// TODO: video上でのdrag and dropとhoverを無効化できるようにする
         _react.default.createElement("div", {
-          style: style,
+          style: this.props.windowStyle,
           onMouseEnter: function onMouseEnter(e) {// console.log("enter");
             // this.props.setDisableDragging(true);
           },
@@ -87,7 +88,8 @@ function (_React$Component) {
 
         }, _react.default.createElement("div", {
           id: "player",
-          className: "fixed-size"
+          className: "fixed-size",
+          style: this.props.videoStyle
         }, _react.default.createElement("div", {
           id: "videoPlayOverlay"
         }, _react.default.createElement(_pixelStreamingContext.default.Consumer, null, function (context) {
@@ -109,7 +111,6 @@ function (_React$Component) {
   return PixelWindow;
 }(_react.default.Component);
 
-var style = {};
 var _default = PixelWindow;
 exports.default = _default;
 

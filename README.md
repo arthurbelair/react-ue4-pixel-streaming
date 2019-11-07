@@ -31,6 +31,8 @@ function App() {
           {context => (
             <div>
               <PixelWindow
+                videoStyle={{width: 1280, height:720}}
+                windowStyle={{width: 1300, height:740}}
                 load={context.load}
                 actions={context.actions}
                 connect={context.connect}
